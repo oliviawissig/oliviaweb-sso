@@ -30,7 +30,7 @@ const SignInPage = () => {
       <div id="log-in-form" className="flex flex-col w-1/3 m-auto">
         <h1 className="roboto-regular text-lg pb-5">Sign In:</h1>
 
-        <TextField
+        <TextField required
           className="pb-5"
           id="outlined-basic"
           label="Email"
@@ -38,7 +38,7 @@ const SignInPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <TextField
+        <TextField required
           className="pb-5"
           id="outlined-basic"
           label="Password"
