@@ -1,8 +1,7 @@
 import { db } from "@/app/firebase/config";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Item } from "../route";
-import { NextApiRequest, NextApiResponse } from "next";
 
 export type OWUser = {
   id: string;
@@ -10,7 +9,7 @@ export type OWUser = {
   username: string;
 };
 
-export async function GET(request: NextApiRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     
   try {
     const q = query(
