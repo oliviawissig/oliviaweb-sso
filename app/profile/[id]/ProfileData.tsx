@@ -22,7 +22,7 @@ const ProfileData = ({ uid }: Props) => {
 
       if (response.ok) {
         const tempUser = await response.json();
-        setUser(tempUser[0]);
+        setUser(tempUser);
         console.log(user);
       }
     };

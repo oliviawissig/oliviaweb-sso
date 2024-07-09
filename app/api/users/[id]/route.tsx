@@ -16,12 +16,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       collection(db, "users"),
       where("id", "==", params.id)
     );
-
     //set list to empty user list
     let users:Item[] = []
 
     const response = await getDocs(q).then((querySnapshot) => {
-        // querySnapshot.docs.map((doc) => doc.data());
         querySnapshot.docs.map((doc) => {
           let userData = {
               email: '',
@@ -34,11 +32,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           users.push(userData);
         });
       });
-
-    console.log(users);
-
-    return NextResponse.json(users);
+    return NextResponse.json(users[0]);
   } catch {
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse("Internal Error", { status: 500 }); 
   }
 }

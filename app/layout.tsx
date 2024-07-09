@@ -7,7 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "OliviaWeb SSO",
-  description: "A page to implement and test OpenWeb's user authentication integration ",
+  description:
+    "A page to implement and test OpenWeb's user authentication integration ",
 };
 
 export default function RootLayout({
