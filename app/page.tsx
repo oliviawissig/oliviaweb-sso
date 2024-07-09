@@ -35,7 +35,6 @@ export default function Home() {
   }, []);
 
   const handleBEDCallback = async (codeA: string) => {
-    console.log("START HANDLEBEDCALLBACK");
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/start-handshake`,
       {
@@ -49,10 +48,7 @@ export default function Home() {
         cache: "no-store",
       }
     );
-    console.log("FINISH RES CALL");
     const data = await res.json();
-    console.log("FINISH DATA CALL");
-
     return data.code_b;
   };
 

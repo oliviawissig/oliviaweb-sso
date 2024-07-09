@@ -21,9 +21,6 @@ export async function POST(request: NextRequest) {
   );
   const tempB = await response.text();
 
-  console.log("GOT THE CODE B");
-  console.log(tempB);
-
   if (!tempB)
     return NextResponse.json("Error with codeB, check OW logs", {
       status: 400,
