@@ -1,3 +1,4 @@
+import { Item } from "@/app/api/users/route";
 import { db } from "@/app/firebase/config";
 import { User } from "firebase/auth";
 import { query, collection, where, getDocs } from "firebase/firestore";
@@ -8,35 +9,33 @@ interface Props {
 }
 
 const ProfileData = ({ uid }: Props) => {
-  let [email, setEmail] = useState("");
-  let [username, setUsername] = useState("");
+  const [user, setUser] = useState<Item>({ id: "", username: "", email: "" });
 
   useEffect(() => {
     const foo = async () => {
-      const q = query(
-        collection(db, "users"),
-        where("id", "==", uid || "0wfnDqme3GayPPcrrmCkkEaKC1l1")
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${uid}`,
+        {
+          cache: "no-store",
+        }
       );
-      const querySnapshot = await getDocs(q);
 
-      const posts = querySnapshot.docs.map((doc) => doc.data());
-
-      console.log(posts);
-
-      setEmail(posts[0].email);
-      setUsername(posts[0].username);
+      if (response.ok) {
+        const tempUser = await response.json();
+        setUser(tempUser[0]);
+        console.log(user);
+      }
     };
     foo();
-  }, [email, username]);
+  }, []);
 
   return (
     <div className="w-1/2 m-auto">
-      <h1 className="roboto-bold text-xl pb-5">User: {username}</h1>
-
-      {email && (
+      <h1 className="roboto-bold text-xl pb-5">User: {user.username}</h1>
+      {user.email && (
         <>
           <p>Email:</p>
-          <p>{email}</p>
+          <p>{user.email}</p>
           <p></p>
         </>
       )}

@@ -1,16 +1,15 @@
-'use client';
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import ProfileData from "./ProfileData";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "@/app/firebase/config";
-
+import { auth } from "@/app/firebase/config";
 
 const UserProfilePage = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   return (
     <div>
-      <ProfileData uid={user?.uid!}/>
+      {loading ? <div>Loading...</div> : <ProfileData uid={user?.uid!} />}
     </div>
   );
 };

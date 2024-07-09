@@ -1,5 +1,5 @@
 "use client";
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
@@ -9,19 +9,25 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [SignInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleSignIn = async () => {
-    try {
-      const res = await SignInWithEmailAndPassword(email, password);
+    setLoading(true);
+    setError("");
+    const res = await SignInWithEmailAndPassword(email, password);
+
+    if (!res) {
+      setLoading(false);
+      setError("Cannot sign in with those credentials");
+    } else {
       console.log({ res });
-      sessionStorage.setItem('user', "true");
+      sessionStorage.setItem("user", "true");
       setEmail("");
       setPassword("");
       router.push("/");
-    } catch (e) {
-      console.error(e);
     }
   };
 
@@ -30,7 +36,8 @@ const SignInPage = () => {
       <div id="log-in-form" className="flex flex-col w-1/3 m-auto">
         <h1 className="roboto-regular text-lg pb-5">Sign In:</h1>
 
-        <TextField required
+        <TextField
+          required
           className="pb-5"
           id="outlined-basic"
           label="Email"
@@ -38,7 +45,8 @@ const SignInPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <TextField required
+        <TextField
+          required
           className="pb-5"
           id="outlined-basic"
           label="Password"
@@ -46,8 +54,20 @@ const SignInPage = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        {error && (
+          <Alert className="mb-5" severity="error">
+            Error signing in! {error}
+          </Alert>
+        )}
+
         <div className="m-auto">
-          <Button onClick={() => handleSignIn()} variant="contained">Sign In</Button>
+          <Button onClick={() => handleSignIn()} variant="contained">
+            {loading ? (
+              <CircularProgress disableShrink color="inherit" />
+            ) : (
+              "Sign In"
+            )}
+          </Button>
         </div>
       </div>
     </div>

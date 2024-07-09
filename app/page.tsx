@@ -1,15 +1,35 @@
-'use client';
 import Link from "next/link";
-import { useAuthState } from "react-firebase-hooks/auth";
-import {auth} from '@/app/firebase/config';
+import { auth } from "@/app/firebase/config";
+import { Item } from "./api/users/route";
 
-export default function Home() {
-  const [user] = useAuthState(auth);
+declare global {
+  interface Window {
+    SPOTIM: any;
+  }
+}
 
-  console.log(user);
+export default async function Home() {
+  let items: Item[] = [];
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+    cache: "no-store",
+  });
+
+  if (response.ok) {
+    const itemsJson = await response.json();
+    if (itemsJson && itemsJson.length > 0) items = itemsJson;
+  }
 
   return (
     <div className="flex flex-col justify-center">
+      <div className="w-1/2 m-auto mb-5">
+        <h2 className="roboto-regular text-lg pb-5">Current Users:</h2>
+        {items.map((item, index) => (
+          <div key={index}>
+            {item.username}, {item.email}, {item.id}
+          </div>
+        ))}
+      </div>
+
       <div className="w-1/2 m-auto">
         <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>
         <p>
@@ -75,6 +95,14 @@ export default function Home() {
           nisi. Integer eget aliquet nibh praesent tristique magna sit. Duis ut
           diam quam nulla porttitor massa.
         </p>
+
+        <div>
+          {/* <Conversation
+            spotId="sp_zKIsqSiP"
+            postId="index"
+            postUrl="http://oliviaweb.oliviawissig.com"
+          /> */}
+        </div>
       </div>
     </div>
   );

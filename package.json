@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto": "^5.0.13",
     "@mui/material": "^5.15.21",
+    "@open-web/react-sdk": "^1.4.2",
     "firebase": "^10.12.2",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
@@ -21,9 +22,12 @@
     "react-firebase-hooks": "^5.1.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "bcryptjs": "^2.4.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
