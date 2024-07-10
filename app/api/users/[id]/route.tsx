@@ -7,6 +7,7 @@ export type OWUser = {
   id: string;
   email: string;
   username: string;
+  image_url: string;
 };
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -24,11 +25,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           let userData = {
               email: '',
               id: '',
-              username: ''
+              username: '',
+              image_url: ''
           };
           userData.email = doc.data().email;
           userData.id = doc.data().id;
           userData.username = doc.data().username;
+          userData.image_url = doc.data().image_url
           users.push(userData);
         });
       });
