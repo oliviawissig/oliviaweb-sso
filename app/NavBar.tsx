@@ -1,27 +1,26 @@
+'use client';
 import { auth } from "./firebase/config.js";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-interface Props {
-  userId: string;
-}
-
-const NavBar = ({ userId }:Props) => {
+const NavBar = () => {
+  const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
   return (
     <nav className="w-screen p-10 flex justify-around">
       <Link href="/">OliviaWeb SSO</Link>
-      <div className="flex flex-row">
-        {userId ? (
+      {loading ? <CircularProgress color="secondary" /> : <div className="flex flex-row">
+        {user?.uid ? (
           <>
             <Button
               className="mx-5"
               onClick={() => {
-                router.push("/profile/" + userId);
+                router.push("/profile/" + user?.uid);
               }}
               variant="outlined"
               color="secondary"
@@ -45,7 +44,7 @@ const NavBar = ({ userId }:Props) => {
             <Link href="/signin">Sign In</Link>
           </>
         )}
-      </div>
+      </div>}
     </nav>
   );
 };

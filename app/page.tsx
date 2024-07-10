@@ -1,13 +1,10 @@
 "use client";
-import {
-  Conversation,
-  OpenWebProvider,
-} from "@open-web/react-sdk";
+import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
 import { useRouter } from "next/navigation";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
-import NavBar from './NavBar';
+import NavBar from "./NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 
@@ -59,8 +56,8 @@ export default function Home() {
           // codeA that the callback gets and should be passed to OW's BED
           code_a: codeA,
           // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
-          userId: auth.currentUser?.uid || '',
-        })
+          userId: auth.currentUser?.uid || "",
+        }),
       }
     );
     const data = await res.json();
@@ -69,17 +66,19 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="loading-component">
-        <p>Loading...</p>
+      <div className="flex flex-col justify-center align-center">
+        <div className="m-auto text-center w-1/2 max-[600px]:w-11/12">
+          <CircularProgress/>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
     <OpenWebProvider
       spotId="sp_zKIsqSiP"
       authentication={{
-        userId: auth.currentUser?.uid || '',
+        userId: auth.currentUser?.uid || "",
         performBEDHandshakeCallback: (codeA: string) => {
           return handleBEDCallback(codeA);
         },
@@ -97,7 +96,6 @@ export default function Home() {
         // },
       }}
     >
-      <NavBar userId={auth.currentUser?.uid!}/>
       <div className="flex flex-col justify-center">
         <div className="w-1/2 max-[600px]:w-11/12 m-auto">
           <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>
@@ -107,14 +105,14 @@ export default function Home() {
             width={"100%"}
             justifyContent={"space-between"}
             marginBottom={2}
-            alignItems={'baseline'}
+            alignItems={"baseline"}
           >
             <h2 className="italic">by Fox Mulder</h2>
             <Button
               onClick={() => handleAnchor()}
               variant="contained"
               startIcon={<QuestionAnswer />}
-              color={'success'}
+              color={"success"}
             >
               {count} Comments
             </Button>
