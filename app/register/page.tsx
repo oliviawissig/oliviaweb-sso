@@ -43,6 +43,7 @@ const RegisterPage = () => {
       setLoading(false);
       if (response.ok) {
         //clear form
+        sessionStorage.setItem("userId", res.user.uid);
         setEmail("");
         setUsername("");
         setPassword("");

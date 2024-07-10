@@ -24,7 +24,7 @@ const SignInPage = () => {
       setError("Cannot sign in with those credentials");
     } else {
       console.log({ res });
-      sessionStorage.setItem("user", "true");
+      sessionStorage.setItem("userId", res.user.uid);
       setEmail("");
       setPassword("");
       router.push("/");

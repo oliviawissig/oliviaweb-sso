@@ -1,17 +1,13 @@
 "use client";
-import { auth } from "@/app/firebase/config";
 import {
   Conversation,
-  MessagesCount,
   OpenWebProvider,
 } from "@open-web/react-sdk";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
 import { Box, Button } from "@mui/material";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
-import { signOut } from "firebase/auth";
-import { basename } from "path";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 declare global {
   interface Window {
@@ -20,9 +16,25 @@ declare global {
 }
 
 export default function Home() {
-  const [user] = useAuthState(auth);
+  const auth = getAuth();
+  const [userId, setUserId] = useState("")
   const [count, setCount] = useState("");
   const router = useRouter();
+
+  onAuthStateChanged(auth, (tempuser) => {
+    console.log("TEMP USER ", tempuser)
+    if (tempuser) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      setUserId(tempuser.uid);
+      console.log("LOGGED IN!!");
+      // ...
+    } else {
+      // User is signed out
+      console.log("LOGGED OUT!!");
+      // ...
+    }
+  });
 
   const handleLogin = () => {
     router.push("/signin");
@@ -61,7 +73,7 @@ export default function Home() {
           // codeA that the callback gets and should be passed to OW's BED
           code_a: codeA,
           // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
-          userId: user?.uid,
+          userId: userId,
         }),
         cache: "no-store",
       }
@@ -74,7 +86,7 @@ export default function Home() {
     <OpenWebProvider
       spotId="sp_zKIsqSiP"
       authentication={{
-        userId: user?.uid,
+        userId: userId,
         performBEDHandshakeCallback: (codeA: string) => {
           return handleBEDCallback(codeA);
         },
@@ -86,10 +98,10 @@ export default function Home() {
         ["spot-im-signup-start"]: (event) => {
           handleSignUp();
         },
-        ["spot-im-user-logout"]: (event) => {
-          signOut(auth);
-          sessionStorage.removeItem("user");
-        },
+        // ["spot-im-user-logout"]: (event) => {
+        //   signOut(auth);
+        //   sessionStorage.removeItem("user");
+        // },
       }}
     >
       <div className="flex flex-col justify-center">
