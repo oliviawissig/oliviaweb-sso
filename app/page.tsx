@@ -1,10 +1,9 @@
 "use client";
-import Link from "next/link";
 import { auth } from "@/app/firebase/config";
-import { Item } from "./api/users/route";
 import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -14,25 +13,15 @@ declare global {
 
 export default function Home() {
   const [user] = useAuthState(auth);
-  const [userItems, setUserItems] = useState<Item[]>([]);
-  const [error, setError] = useState("");
+  const router = useRouter();
+  
+  const handleLogin = () => {
+    router.push("/signin");
+  };
 
-  useEffect(() => {
-    const foo = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
-        {
-          cache: "no-store",
-        }
-      );
-
-      if (response.ok) {
-        const itemsJson = await response.json();
-        if (itemsJson && itemsJson.length > 0) setUserItems(itemsJson);
-      }
-    };
-    foo();
-  }, []);
+  const handleSignUp = () => {
+    router.push("/register");
+  };
 
   const handleBEDCallback = async (codeA: string) => {
     const res = await fetch(
@@ -61,17 +50,16 @@ export default function Home() {
           return handleBEDCallback(codeA);
         },
       }}
+      tracking={{
+        ['spot-im-login-start']: event => {
+          handleLogin();
+        },
+        ['spot-im-signup-start']: event => {
+          handleSignUp();
+        },
+      }}
     >
       <div className="flex flex-col justify-center">
-        <div className="w-1/2 m-auto mb-5">
-          <h2 className="roboto-regular text-lg pb-5">Current Users:</h2>
-          {userItems.map((item, index) => (
-            <div key={index}>
-              {item.username}, {item.email}
-            </div>
-          ))}
-        </div>
-
         <div className="w-1/2 m-auto">
           <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>
           <p>

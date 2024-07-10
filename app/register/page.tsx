@@ -63,10 +63,10 @@ const RegisterPage = () => {
           noValidate
           autoComplete="off"
           className="flex flex-col"
+          rowGap={3}
         >
           <TextField
             required
-            className="pb-5"
             id="outlined-basic"
             label="Email"
             variant="outlined"
@@ -75,7 +75,6 @@ const RegisterPage = () => {
 
           <TextField
             required
-            className="pb-5"
             id="outlined-basic"
             label="Username"
             variant="outlined"
@@ -84,7 +83,6 @@ const RegisterPage = () => {
 
           <TextField
             required
-            className="pb-5"
             id="outlined-basic"
             label="Password"
             variant="outlined"
@@ -92,7 +90,7 @@ const RegisterPage = () => {
           />
 
           {error && (
-            <Alert className="mb-5" severity="error">
+            <Alert severity="error">
               Error creating user! {error}
             </Alert>
           )}
@@ -100,7 +98,7 @@ const RegisterPage = () => {
           <div className="m-auto">
             <Button onClick={() => handleSignUp()} variant="contained">
               {loading ? (
-                <CircularProgress disableShrink color="inherit" />
+                <CircularProgress disableShrink color="inherit" size={30} />
               ) : (
                 "Register"
               )}
