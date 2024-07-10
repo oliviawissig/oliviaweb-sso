@@ -1,25 +1,39 @@
 "use client";
+import {auth} from './firebase/config.js';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import Link from "next/link";
-import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
-import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 const NavBar = () => {
-  const [user] = useAuthState(auth);
+  const [userId, setUserId] = useState('');
   const router = useRouter();
+
+  onAuthStateChanged(auth, (tempuser) => {
+    console.log("TEMP USER ", tempuser)
+    if (tempuser) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      setUserId(tempuser.uid);
+      console.log("LOGGED IN!!");
+      // ...
+    } else {
+      // User is signed out
+      console.log("LOGGED OUT!!");
+      // ...
+    }
+  });
 
   return (
     <nav className="w-screen p-10 flex justify-around">
       <Link href="/">OliviaWeb SSO</Link>
       <div className="flex flex-row">
-        {user ? (
+        {userId ? (
           <>
             <Button className="mx-5"
               onClick={() => {
-                router.push('/profile/' + user.uid)
+                router.push('/profile/' + userId)
               }}
               variant="outlined" color="secondary"
             >

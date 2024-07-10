@@ -1,4 +1,6 @@
 "use client";
+import {auth} from './firebase/config.js';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   Conversation,
   OpenWebProvider,
@@ -7,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { Box, Button } from "@mui/material";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 declare global {
   interface Window {
@@ -16,13 +17,11 @@ declare global {
 }
 
 export default function Home() {
-  const auth = getAuth();
   const [userId, setUserId] = useState("")
   const [count, setCount] = useState("");
   const router = useRouter();
 
   onAuthStateChanged(auth, (tempuser) => {
-    console.log("TEMP USER ", tempuser)
     if (tempuser) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
@@ -50,6 +49,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    setUserId(sessionStorage.getItem("userId") || auth.currentUser?.uid || userId );
     fetch(
       "https://open-api.spot.im/v1/messages-count?spot_id=sp_zKIsqSiP&posts_ids=index"
     )
@@ -74,8 +74,7 @@ export default function Home() {
           code_a: codeA,
           // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
           userId: userId,
-        }),
-        cache: "no-store",
+        })
       }
     );
     const data = await res.json();
