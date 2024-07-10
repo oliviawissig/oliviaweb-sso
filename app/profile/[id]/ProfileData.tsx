@@ -46,7 +46,7 @@ const ProfileData = ({ uid }: Props) => {
       <h1 className="roboto-bold text-xl pb-5">User: {user.username}</h1>
       <p>Email: {user.email}</p>
       <p></p>
-      <p>User ID: {uid}</p>
+      <p>User ID (primary key): {uid}</p>
       <p></p>
       <p>Avatar:</p>
       <Image src={user.image_url!} alt={"User Avatar"} width="64" height="64"/>
