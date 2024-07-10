@@ -93,7 +93,7 @@ export default function Home() {
       }}
     >
       <div className="flex flex-col justify-center">
-        <div className="w-1/2 m-auto">
+        <div className="w-1/2 max-[600px]:w-11/12 m-auto">
           <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>
           <Box
             display={"flex"}
