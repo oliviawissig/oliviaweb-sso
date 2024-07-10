@@ -1,6 +1,4 @@
 "use client";
-import {auth} from './firebase/config.js';
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   Conversation,
   OpenWebProvider,
@@ -9,6 +7,9 @@ import { useRouter } from "next/navigation";
 import { Box, Button } from "@mui/material";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
+import NavBar from './NavBar';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase/config";
 
 declare global {
   interface Window {
@@ -17,23 +18,9 @@ declare global {
 }
 
 export default function Home() {
-  const [userId, setUserId] = useState("")
   const [count, setCount] = useState("");
   const router = useRouter();
-
-  onAuthStateChanged(auth, (tempuser) => {
-    if (tempuser) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      setUserId(tempuser.uid);
-      console.log("LOGGED IN!!");
-      // ...
-    } else {
-      // User is signed out
-      console.log("LOGGED OUT!!");
-      // ...
-    }
-  });
+  const [user, loading] = useAuthState(auth);
 
   const handleLogin = () => {
     router.push("/signin");
@@ -49,7 +36,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setUserId(sessionStorage.getItem("userId") || auth.currentUser?.uid || userId );
     fetch(
       "https://open-api.spot.im/v1/messages-count?spot_id=sp_zKIsqSiP&posts_ids=index"
     )
@@ -73,7 +59,7 @@ export default function Home() {
           // codeA that the callback gets and should be passed to OW's BED
           code_a: codeA,
           // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
-          userId: userId,
+          userId: auth.currentUser?.uid || '',
         })
       }
     );
@@ -81,11 +67,19 @@ export default function Home() {
     return data.code_b;
   };
 
+  if (loading) {
+    return (
+      <div className="loading-component">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <OpenWebProvider
       spotId="sp_zKIsqSiP"
       authentication={{
-        userId: userId,
+        userId: auth.currentUser?.uid || '',
         performBEDHandshakeCallback: (codeA: string) => {
           return handleBEDCallback(codeA);
         },
@@ -103,6 +97,7 @@ export default function Home() {
         // },
       }}
     >
+      <NavBar userId={auth.currentUser?.uid!}/>
       <div className="flex flex-col justify-center">
         <div className="w-1/2 max-[600px]:w-11/12 m-auto">
           <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>

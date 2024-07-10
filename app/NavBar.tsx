@@ -1,29 +1,16 @@
-"use client";
-import {auth} from './firebase/config.js';
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./firebase/config.js";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-const NavBar = () => {
-  const [userId, setUserId] = useState('');
-  const router = useRouter();
+interface Props {
+  userId: string;
+}
 
-  onAuthStateChanged(auth, (tempuser) => {
-    console.log("TEMP USER ", tempuser)
-    if (tempuser) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      setUserId(tempuser.uid);
-      console.log("LOGGED IN!!");
-      // ...
-    } else {
-      // User is signed out
-      console.log("LOGGED OUT!!");
-      // ...
-    }
-  });
+const NavBar = ({ userId }:Props) => {
+  const router = useRouter();
 
   return (
     <nav className="w-screen p-10 flex justify-around">
@@ -31,11 +18,13 @@ const NavBar = () => {
       <div className="flex flex-row">
         {userId ? (
           <>
-            <Button className="mx-5"
+            <Button
+              className="mx-5"
               onClick={() => {
-                router.push('/profile/' + userId)
+                router.push("/profile/" + userId);
               }}
-              variant="outlined" color="secondary"
+              variant="outlined"
+              color="secondary"
             >
               Profile
             </Button>

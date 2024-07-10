@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   if (!tempUser) return NextResponse.json("User not found!", { status: 404 });
 
   const response = await fetch(
-    `https://www.spot.im/api/sso/v1/register-user?code_a=${body.code_a}&access_token=${process.env.NEXT_PUBLIC_OPENWEB_SSO_TOKEN}&primary_key=${tempUser.id}&user_name=${tempUser.username}`,
+    `https://www.spot.im/api/sso/v1/register-user?code_a=${body.code_a}&access_token=${process.env.NEXT_PUBLIC_OPENWEB_SSO_TOKEN}&primary_key=${tempUser.id}&user_name=${tempUser.username}&email_verified=true`,
     {
       cache: "no-store",
     }
