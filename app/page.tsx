@@ -1,9 +1,17 @@
 "use client";
 import { auth } from "@/app/firebase/config";
-import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
+import {
+  Conversation,
+  MessagesCount,
+  OpenWebProvider,
+} from "@open-web/react-sdk";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Box, Button } from "@mui/material";
+import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
+import { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
+import { basename } from "path";
 
 declare global {
   interface Window {
@@ -13,8 +21,9 @@ declare global {
 
 export default function Home() {
   const [user] = useAuthState(auth);
+  const [count, setCount] = useState("");
   const router = useRouter();
-  
+
   const handleLogin = () => {
     router.push("/signin");
   };
@@ -22,6 +31,26 @@ export default function Home() {
   const handleSignUp = () => {
     router.push("/register");
   };
+
+  const handleAnchor = () => {
+    var element = document.getElementById("olivias-convo");
+    element!.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    fetch(
+      "https://open-api.spot.im/v1/messages-count?spot_id=sp_zKIsqSiP&posts_ids=index"
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setCount(data.messages_count.index);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleBEDCallback = async (codeA: string) => {
     const res = await fetch(
@@ -51,17 +80,39 @@ export default function Home() {
         },
       }}
       tracking={{
-        ['spot-im-login-start']: event => {
+        ["spot-im-login-start"]: (event) => {
           handleLogin();
         },
-        ['spot-im-signup-start']: event => {
+        ["spot-im-signup-start"]: (event) => {
           handleSignUp();
+        },
+        ["spot-im-user-logout"]: (event) => {
+          signOut(auth);
+          sessionStorage.removeItem("user");
         },
       }}
     >
       <div className="flex flex-col justify-center">
         <div className="w-1/2 m-auto">
           <h1 className="roboto-regular text-2xl pb-5">A New Community</h1>
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            width={"100%"}
+            justifyContent={"space-between"}
+            marginBottom={2}
+            alignItems={'baseline'}
+          >
+            <h2 className="italic">by Fox Mulder</h2>
+            <Button
+              onClick={() => handleAnchor()}
+              variant="contained"
+              startIcon={<QuestionAnswer />}
+              color={'success'}
+            >
+              {count} Comments
+            </Button>
+          </Box>
           <p>
             &emsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
             do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
@@ -129,7 +180,7 @@ export default function Home() {
             massa.
           </p>
 
-          <div>
+          <div id="olivias-convo">
             <Conversation
               postId="index"
               postUrl="http://oliviaweb.oliviawissig.com"
