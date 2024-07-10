@@ -41,8 +41,6 @@ const ProfileData = ({ uid }: Props) => {
     )
   }
 
-  console.log(user.image_url);
-
   return (
     <div>
       <h1 className="roboto-bold text-xl pb-5">User: {user.username}</h1>
