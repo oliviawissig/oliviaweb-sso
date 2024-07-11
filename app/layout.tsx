@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
 import NavBar from "./NavBar";
 
@@ -33,9 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* <img src="https://hitwebcounter.com/counter/counter.php?page=7987017&amp;style=0007&amp;nbdigits=6&amp;type=page&amp;initCount=0" alt="web counter" /> */}
+        <img className="p-4" src="https://hitwebcounter.com/counter/counter.php?page=14749641&style=0007&nbdigits=5&type=page&initCount=0" title="Counter Widget" alt="Visit counter For Websites" />                                    
         <NavBar/>
         {children}
+        
       </body>
+      <GoogleAnalytics gaId="G-PPJD5QEJH6" />
     </html>
   );
 }
