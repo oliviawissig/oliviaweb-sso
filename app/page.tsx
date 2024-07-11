@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import { signOut } from "firebase/auth";
+import handleBEDCallback from "./SSOhandler";
 
 declare global {
   interface Window {
@@ -48,24 +49,6 @@ export default function Home() {
       });
   }, []);
 
-  const handleBEDCallback = async (codeA: string) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/start-handshake`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          // codeA that the callback gets and should be passed to OW's BED
-          code_a: codeA,
-          // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
-          userId: auth.currentUser?.uid,
-        }),
-      }
-    );
-    const data = await res.json();
-    setOwReady(true);
-    return data.code_b;
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col justify-center align-center">
@@ -83,7 +66,8 @@ export default function Home() {
         userId: auth.currentUser?.uid,
         performBEDHandshakeCallback: (codeA: string) => {
           setOwReady(false);
-          return handleBEDCallback(codeA);
+          const userId = auth.currentUser?.uid || "";
+          return handleBEDCallback(codeA, userId);
         },
       }}
       tracking={{
