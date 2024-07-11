@@ -3,8 +3,6 @@ import React from "react";
 import ProfileData from "./ProfileData";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/app/firebase/config";
-import { CldUploadWidget } from "next-cloudinary";
-import { Button } from "@mui/material";
 import { collection, doc, getDoc, query, setDoc, where } from "firebase/firestore";
 
 interface CloudinaryResult {
