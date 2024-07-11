@@ -10,7 +10,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [overallLoading, setLoading] = useState(false);
   const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
@@ -27,7 +27,7 @@ const RegisterPage = () => {
       let userData = {
         email: email,
         username: username,
-        id: res?.user.uid,
+        id: res.user.uid,
       };
 
       const response = await fetch(
@@ -98,7 +98,7 @@ const RegisterPage = () => {
 
           <div className="m-auto">
             <Button onClick={() => handleSignUp()} variant="contained">
-              {loading ? (
+              {overallLoading ? (
                 <CircularProgress disableShrink color="inherit" size={30} />
               ) : (
                 "Register"

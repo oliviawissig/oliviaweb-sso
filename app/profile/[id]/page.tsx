@@ -5,7 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/app/firebase/config";
 import { CldUploadWidget } from "next-cloudinary";
 import { Button } from "@mui/material";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, query, setDoc, where } from "firebase/firestore";
 
 interface CloudinaryResult {
   public_id: string;
@@ -20,6 +20,11 @@ const UserProfilePage = () => {
 
   const updateImgUrl = async ({ public_id }: Props) => {
     //update doc in firestore
+    const q = query(
+      collection(db, "users"),
+      where("id", "==", user?.uid)
+    );
+
     const userRef = doc(db, "users", user?.uid!);
     console.log(userRef);
     await setDoc(userRef, {

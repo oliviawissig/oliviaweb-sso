@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Box, Button, CircularProgress } from "@mui/material";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
-import NavBar from "./NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 
@@ -48,6 +47,7 @@ export default function Home() {
   }, []);
 
   const handleBEDCallback = async (codeA: string) => {
+    console.log("HANDLEBEDCALLBACK START");
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/start-handshake`,
       {
@@ -56,11 +56,13 @@ export default function Home() {
           // codeA that the callback gets and should be passed to OW's BED
           code_a: codeA,
           // We want to let the BED we want to login with a certain user - that is, the user we should do the BED handshake with OW.
-          userId: auth.currentUser?.uid || "",
+          userId: auth.currentUser?.uid,
         }),
       }
     );
+    console.log("HANDLEBEDCALLBACK API DONE");
     const data = await res.json();
+    console.log("HANDLEBEDCALLBACK DATA DONE");    
     return data.code_b;
   };
 
@@ -78,7 +80,7 @@ export default function Home() {
     <OpenWebProvider
       spotId="sp_zKIsqSiP"
       authentication={{
-        userId: auth.currentUser?.uid || "",
+        userId: auth.currentUser?.uid,
         performBEDHandshakeCallback: (codeA: string) => {
           return handleBEDCallback(codeA);
         },

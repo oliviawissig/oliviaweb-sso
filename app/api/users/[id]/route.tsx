@@ -1,7 +1,6 @@
 import { db } from "@/app/firebase/config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
-import { Item } from "../route";
 
 export type OWUser = {
   id: string;
@@ -10,33 +9,19 @@ export type OWUser = {
   image_url: string;
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-    
-  try {
-    const q = query(
-      collection(db, "users"),
-      where("id", "==", params.id)
-    );
-    //set list to empty user list
-    let users:Item[] = []
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  console.log(params.id);
+  const docRef = doc(db, "users", params.id);
+  const docSnap = await getDoc(docRef);
 
-    const response = await getDocs(q).then((querySnapshot) => {
-        querySnapshot.docs.map((doc) => {
-          let userData = {
-              email: '',
-              id: '',
-              username: '',
-              image_url: ''
-          };
-          userData.email = doc.data().email;
-          userData.id = doc.data().id;
-          userData.username = doc.data().username;
-          userData.image_url = doc.data().image_url
-          users.push(userData);
-        });
-      });
-    return NextResponse.json(users[0]);
-  } catch {
-    return new NextResponse("Internal Error", { status: 500 }); 
+  if (docSnap.exists()) {
+    // console.log("Document data:", docSnap.data());
+    return NextResponse.json(docSnap.data());
+  } else {
+    console.log("No such document!");
+    return new NextResponse("No document found!", { status: 404 });
   }
 }

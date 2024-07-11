@@ -1,7 +1,4 @@
 import { Item } from "@/app/api/users/route";
-import { db } from "@/app/firebase/config";
-import { User } from "firebase/auth";
-import { query, collection, where, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Image from 'next/image'
 
