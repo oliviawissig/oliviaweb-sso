@@ -64,7 +64,7 @@ const UserProfilePage = () => {
   return (
     <div className="w-1/2 m-auto">
       <ProfileData uid={user!.uid} />
-      <CldUploadWidget
+      {/* <CldUploadWidget
         uploadPreset="zax4qscb"
         options={{
           sources: ["local"],
@@ -82,7 +82,7 @@ const UserProfilePage = () => {
             Upload Image
           </Button>
         )}
-      </CldUploadWidget>
+      </CldUploadWidget> */}
     </div>
   );
 };
