@@ -78,7 +78,7 @@ export default function Home() {
 
   return (
     <OpenWebProvider
-      spotId="sp_zKIsqSiP"
+      spotId="sp_BWykFJiw"
       authentication={{
         userId: auth.currentUser?.uid,
         performBEDHandshakeCallback: (codeA: string) => {
