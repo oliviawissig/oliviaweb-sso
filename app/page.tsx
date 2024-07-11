@@ -35,7 +35,7 @@ export default function Home() {
 
   useEffect(() => {
     fetch(
-      "https://open-api.spot.im/v1/messages-count?spot_id=sp_zKIsqSiP&posts_ids=index"
+      "https://open-api.spot.im/v1/messages-count?spot_id=sp_BWykFJiw&posts_ids=index"
     )
       .then((response) => {
         return response.json();
