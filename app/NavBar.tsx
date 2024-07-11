@@ -29,6 +29,7 @@ const NavBar = () => {
             </Button>
             <Button
               onClick={() => {
+                router.push('');
                 signOut(auth);
                 sessionStorage.removeItem("user");
               }}
