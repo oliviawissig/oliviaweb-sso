@@ -6,6 +6,7 @@ import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
+import { signOut } from "firebase/auth";
 
 declare global {
   interface Window {
@@ -17,6 +18,7 @@ export default function Home() {
   const [count, setCount] = useState("");
   const router = useRouter();
   const [user, loading] = useAuthState(auth);
+  const [owReady, setOwReady] = useState(true);
 
   const handleLogin = () => {
     router.push("/signin");
@@ -47,7 +49,6 @@ export default function Home() {
   }, []);
 
   const handleBEDCallback = async (codeA: string) => {
-    console.log("HANDLEBEDCALLBACK START");
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/start-handshake`,
       {
@@ -60,9 +61,8 @@ export default function Home() {
         }),
       }
     );
-    console.log("HANDLEBEDCALLBACK API DONE");
     const data = await res.json();
-    console.log("HANDLEBEDCALLBACK DATA DONE");    
+    setOwReady(true);
     return data.code_b;
   };
 
@@ -82,6 +82,7 @@ export default function Home() {
       authentication={{
         userId: auth.currentUser?.uid,
         performBEDHandshakeCallback: (codeA: string) => {
+          setOwReady(false);
           return handleBEDCallback(codeA);
         },
       }}
@@ -92,10 +93,10 @@ export default function Home() {
         ["spot-im-signup-start"]: (event) => {
           handleSignUp();
         },
-        // ["spot-im-user-logout"]: (event) => {
-        //   signOut(auth);
-        //   sessionStorage.removeItem("user");
-        // },
+        ["spot-im-user-logout"]: (event) => {
+          signOut(auth);
+          sessionStorage.removeItem("user");
+        },
       }}
     >
       <div className="flex flex-col justify-center">
@@ -186,12 +187,12 @@ export default function Home() {
             massa.
           </p>
 
-          <div id="olivias-convo">
+          {owReady && <div id="olivias-convo">
             <Conversation
               postId="index"
               postUrl="http://oliviaweb.oliviawissig.com"
             />
-          </div>
+          </div>}
         </div>
       </div>
     </OpenWebProvider>
