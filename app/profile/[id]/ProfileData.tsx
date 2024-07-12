@@ -1,12 +1,19 @@
 import { Item } from "@/app/api/users/route";
 import React, { useEffect, useState } from "react";
-import Image from 'next/image'
-import { startTTH } from '@open-web/react-sdk';
-import handleBEDCallback from '@/app/SSOhandler'
-import { collection, doc, getDoc, query, updateDoc, where } from "firebase/firestore";
+import Image from "next/image";
+import { startTTH } from "@open-web/react-sdk";
+import handleBEDCallback from "@/app/SSOhandler";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { CldUploadWidget } from "next-cloudinary";
 import { Button, CircularProgress } from "@mui/material";
-import { logout as OWLogout } from '@open-web/react-sdk';
+import { logout as OWLogout } from "@open-web/react-sdk";
 import { db } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 
@@ -23,7 +30,12 @@ interface ImageUrlProps {
 }
 
 const ProfileData = ({ uid }: PropfileDataProps) => {
-  const [user, setUser] = useState<Item>({ id: "", username: "", email: "", image_url: "" });
+  const [user, setUser] = useState<Item>({
+    id: "",
+    username: "",
+    email: "",
+    image_url: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const [btnLoading, setBtnLoading] = useState(false);
@@ -32,10 +44,7 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
   const updateImgUrl = async ({ url }: ImageUrlProps) => {
     setBtnLoading(true);
     // update doc in firestore
-    const q = query(
-      collection(db, "users"),
-      where("id", "==", uid)
-    );
+    const q = query(collection(db, "users"), where("id", "==", uid));
     const userRef = doc(db, "users", uid!);
     await updateDoc(userRef, {
       image_url: url,
@@ -61,11 +70,14 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
       }
     );
     OWLogout();
-    await startTTH({ userId: uid, performBEDHandshakeCallback: async (codeA: string) => {
-      return handleBEDCallback(codeA, uid);
-    }});
+    await startTTH({
+      userId: uid,
+      performBEDHandshakeCallback: async (codeA: string) => {
+        return handleBEDCallback(codeA, uid);
+      },
+    });
     setBtnLoading(false);
-    router.push('/');
+    router.push("/");
   };
 
   useEffect(() => {
@@ -81,7 +93,6 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
       if (response.ok) {
         const tempUser = await response.json();
         setUser(tempUser);
-        console.log(user);
       }
       setLoading(false);
     };
@@ -93,7 +104,7 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
       <div className="w-1/2 m-auto">
         <p>Loading...</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -104,7 +115,7 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
       <p>User ID (primary key): {uid}</p>
       <p></p>
       <p>Avatar:</p>
-      <Image src={user.image_url!} alt={"User Avatar"} width="64" height="64"/>
+      <Image src={user.image_url!} alt={"User Avatar"} width="64" height="64" />
       <p></p>
       <CldUploadWidget
         uploadPreset="zax4qscb"
@@ -114,15 +125,30 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
           maxFiles: 1,
         }}
         onSuccess={(result, options) => {
-          console.log(result);
           if (result.event !== "success") return;
           const info = result.info as CloudinaryResult;
           updateImgUrl({ url: info.url });
         }}
       >
         {({ open }) => (
-          <Button disabled={btnLoading ? true : false} onClick={() => open()} variant="outlined">
-            {btnLoading ? <CircularProgress color={"inherit"}/> : "Upload Image"}
+          <Button
+            disabled={btnLoading ? true : false}
+            onClick={() => open()}
+            variant="outlined"
+            sx={{
+              color: "var(--brand-color)",
+              borderColor: "var(--brand-color)",
+              "&:hover": {
+                backgroundColor: "rgba(150, 113, 174, 0.1)",
+                borderColor: "var(--brand-color)",
+              },
+            }}
+          >
+            {btnLoading ? (
+              <CircularProgress color={"inherit"} />
+            ) : (
+              "Upload Image"
+            )}
           </Button>
         )}
       </CldUploadWidget>

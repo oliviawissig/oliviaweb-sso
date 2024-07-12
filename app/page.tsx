@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import { signOut } from "firebase/auth";
 import handleBEDCallback from "./SSOhandler";
+import OWButton from "./components/OWButton";
 
 declare global {
   interface Window {
@@ -95,14 +96,12 @@ export default function Home() {
             alignItems={"baseline"}
           >
             <h2 className="italic">by Fox Mulder</h2>
-            <Button
+            <OWButton
               onClick={() => handleAnchor()}
-              variant="contained"
-              startIcon={<QuestionAnswer />}
-              color={"success"}
             >
               {count} Comments
-            </Button>
+            </OWButton>
+            {/* {count} Comments */}
           </Box>
           <p>
             &emsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed

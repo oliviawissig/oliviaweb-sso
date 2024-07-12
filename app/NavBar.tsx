@@ -23,7 +23,14 @@ const NavBar = () => {
                 router.push("/profile/" + user?.uid);
               }}
               variant="outlined"
-              color="secondary"
+              sx={{
+                color: 'var(--brand-color)',
+                borderColor: 'var(--brand-color)',
+                "&:hover": {
+                  backgroundColor: "rgba(150, 113, 174, 0.1)",
+                  borderColor: "var(--brand-color)"
+                }
+              }}
             >
               Profile
             </Button>
