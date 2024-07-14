@@ -123,7 +123,7 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       </Box>
       {htmlParser.parse(article.content)}
 
-      <div id="olivias-convo">
+      <div id="olivias-convo" className="pb-28">
         <Conversation
           postId={`${article.id}`}
           postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}

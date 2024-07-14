@@ -58,8 +58,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="w-screen h-screen -mt-36 flex flex-col">
-      <div id="log-in-form" className="flex flex-col w-1/3 m-auto max-[600px]:w-11/12">
+      <div id="log-in-form" className="flex flex-col w-1/2 m-auto mt-16 max-[600px]:w-11/12">
         <h1 className="roboto-regular text-lg pb-5">Sign Up / Register:</h1>
         <Box
           component="form"
@@ -109,7 +108,6 @@ const RegisterPage = () => {
           </div>
         </Box>
       </div>
-    </div>
   );
 };
 

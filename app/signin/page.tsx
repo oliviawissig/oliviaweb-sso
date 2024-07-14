@@ -32,8 +32,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col -mt-36">
-      <div id="log-in-form" className="flex flex-col w-1/3 m-auto max-[600px]:w-11/12">
+      <div id="log-in-form" className="flex flex-col w-1/2 m-auto mt-16 max-[600px]:w-11/12">
         <h1 className="roboto-regular text-lg pb-5">Sign In:</h1>
         <Box
           component="form"
@@ -72,7 +71,6 @@ const SignInPage = () => {
           </div>
         </Box>
       </div>
-    </div>
   );
 };
 

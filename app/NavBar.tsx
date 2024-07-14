@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import OWProgress from "./components/OWProgress";
+import { logout as OWlogout } from "@open-web/react-sdk";
 
 const NavBar = () => {
   const [user, loading] = useAuthState(auth);
@@ -38,6 +39,7 @@ const NavBar = () => {
             <Button
               onClick={() => {
                 router.push('');
+                OWlogout();
                 signOut(auth);
                 sessionStorage.removeItem("user");
               }}
