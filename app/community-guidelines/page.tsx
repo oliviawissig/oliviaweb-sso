@@ -60,9 +60,7 @@ const GuidelinesPage = () => {
       </ul>
 
       <h3>
-        {" "}
-        Thanks for reading our community guidelines. Don't forget, freedom of
-        speech is not the freedom of reach!{" "}
+        Thanks for reading our community guidelines!
       </h3>
     </div>
   );

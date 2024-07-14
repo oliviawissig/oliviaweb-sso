@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from 'next/image';
 import { Inter } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
@@ -35,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <img
+        <Image
           className="p-4"
           src="https://hitwebcounter.com/counter/counter.php?page=14749641&style=0007&nbdigits=5&type=page&initCount=0"
           title="Counter Widget"
