@@ -31,9 +31,9 @@ export default function Articles() {
         <OWProgress />
       ) : (
         <div>
-          {articles.map((a) => {
+          {articles.map((a, key) => {
             return (
-              <div>
+              <div key={key}>
                 <OWLink className="capitalize" href={`/articles/${a.id}`}>
                   {a.id}
                 </OWLink>

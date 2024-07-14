@@ -8,7 +8,7 @@ const GuidelinesPage = () => {
       <p>
         Our community is about connecting people through open and thoughtful
         conversations. We want our readers to share their views and exchange
-        ideas in a safe space. In order to do so, we’ve created a simple set of
+        ideas in a safe space. In order to do so, we&apos;ve created a simple set of
         rules that will improve your experience. Simply put, keep it civil.
       </p>
 
@@ -20,7 +20,7 @@ const GuidelinesPage = () => {
           threats of any kind
         </li>
         <li>
-          Attacks on the identity of other commenters or the article’s author
+          Attacks on the identity of other commenters or the article&apos;s author
         </li>
       </ul>
 
@@ -42,7 +42,7 @@ const GuidelinesPage = () => {
           threats of any kind
         </li>
         <li>
-          Attacks on the identity of other commenters or the article’s author
+          Attacks on the identity of other commenters or the article&apos;s author
         </li>
       </ul>
 
@@ -52,7 +52,7 @@ const GuidelinesPage = () => {
           Stay on topic and share your passion. Feel free to elaborate to get
           your point across.
         </li>
-        <li>‘Like’ or ‘Dislike’ when you are filled with emotions!</li>
+        <li>&apos;Like&apos; or &apos;Dislike&apos; when you are filled with emotions!</li>
         <li>
           Protect your community. Use the report tool to alert us when someone
           breaks the rules.

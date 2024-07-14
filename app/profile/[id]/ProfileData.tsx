@@ -97,7 +97,7 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
       setLoading(false);
     };
     foo();
-  }, []);
+  }, [uid]);
 
   if (loading) {
     return (

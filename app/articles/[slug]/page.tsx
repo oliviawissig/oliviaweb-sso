@@ -67,7 +67,7 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [params.slug]);
 
   if (allLoading) {
     return (
