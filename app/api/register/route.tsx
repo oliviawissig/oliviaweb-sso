@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 import { Item } from "../users/route";
+import { startTTH } from "@open-web/react-sdk";
+import handleBEDCallback from "@/app/components/SSOhandler";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -40,18 +42,12 @@ export async function POST(request: NextRequest) {
     return `https://oliviaweb.oliviawissig.com/avatars/icon${randomInt}.jpg`;
   }
 
-  console.log("SET DOC START");
-  console.log(body.id);
-  console.log(body.email);
-  console.log(body.username);
-  console.log(getRandomAvatar());
   await setDoc(doc(db, "users", body.id), {
     email: body.email,
     username: body.username,
     id: body.id,
     image_url: getRandomAvatar(),
   });
-  console.log("SET DOC END");
 
   return NextResponse.json({
     email: body.email,

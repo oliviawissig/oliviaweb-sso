@@ -2,7 +2,7 @@ import { Item } from "@/app/api/users/route";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { startTTH } from "@open-web/react-sdk";
-import handleBEDCallback from "@/app/SSOhandler";
+import handleBEDCallback from "@/app/components/SSOhandler";
 import {
   collection,
   doc,

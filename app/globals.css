@@ -8,7 +8,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --brand-color: #9671AE;
+  --brand-color: #9671ae;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,8 +24,32 @@ body {
   background-color: rgb(var(--background-end-rgb)); */
 }
 
-p {
-  margin-bottom: 1em;
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight:500;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight:500;
+}
+
+ul {
+  margin-left: 2rem;
+  list-style-type: circle;
+  margin-bottom: 1rem;
+}
+
+p{
+  margin-bottom:1rem;
 }
 
 .roboto-light {

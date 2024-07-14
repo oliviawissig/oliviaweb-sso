@@ -1,5 +1,5 @@
 import { QuestionAnswer } from "@mui/icons-material";
-import { Button, SxProps, Theme } from "@mui/material";
+import { Button } from "@mui/material";
 import { ReactNode } from "react";
 
 interface OWButtonProps {

@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
     //set list to empty user list
     let users:Item[] = [];
 
-    const response = await getDocs(q).then((querySnapshot) => {
+    const response = await getDocs(q)
+    .then((querySnapshot) => {
       // querySnapshot.docs.map((doc) => doc.data());
       querySnapshot.docs.map((doc) => {
         let userData = {

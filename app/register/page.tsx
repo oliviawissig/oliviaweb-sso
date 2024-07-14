@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { startTTH } from "@open-web/react-sdk";
+import handleBEDCallback from "../components/SSOhandler";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");

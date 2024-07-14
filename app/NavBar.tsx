@@ -3,9 +3,10 @@ import { auth } from "./firebase/config.js";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import React from "react";
-import { Button, CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
+import OWProgress from "./components/OWProgress";
 
 const NavBar = () => {
   const [user, loading] = useAuthState(auth);
@@ -14,7 +15,7 @@ const NavBar = () => {
   return (
     <nav className="w-screen p-10 flex justify-around">
       <Link href="/">OliviaWeb SSO</Link>
-      {loading ? <CircularProgress color="secondary" /> : <div className="flex flex-row">
+      {loading ? <OWProgress /> : <div className="flex flex-row">
         {user?.uid ? (
           <>
             <Button
