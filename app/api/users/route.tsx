@@ -1,21 +1,14 @@
 import { db } from "@/app/firebase/config";
 import { collection, getDocs, query } from "firebase/firestore";
 import { NextResponse, NextRequest } from "next/server";
-
-export type Item = {
-  id: string;
-  email: string;
-  username: string;
-  image_url: string;
-};
-
+import { OWUser } from "./[id]/route";
 
 export async function GET(request: NextRequest) {
   try {
     //get users list query
     const q = query(collection(db, "users"));
     //set list to empty user list
-    let users:Item[] = [];
+    let users:OWUser[] = [];
 
     const response = await getDocs(q)
     .then((querySnapshot) => {
@@ -25,12 +18,14 @@ export async function GET(request: NextRequest) {
             email: '',
             id: '',
             username: '',
-            image_url: ''
+            image_url: '',
+            display_name: ''
         };
         userData.email = doc.data().email;
         userData.id = doc.data().id;
         userData.username = doc.data().username;
         userData.image_url = doc.data().image_url;
+        userData.display_name = doc.data().display_name;
         users.push(userData);
       });
     });

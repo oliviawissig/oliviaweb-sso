@@ -12,6 +12,11 @@ const nextConfig = {
                 hostname: 'oliviaweb.oliviawissig.com',
                 pathname: '**',
               },
+              {
+                protocol: 'https',
+                hostname: 'hitwebcounter.com',
+                pathname: '**',
+              },
           ],
       },
 };

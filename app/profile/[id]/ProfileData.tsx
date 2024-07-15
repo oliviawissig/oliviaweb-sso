@@ -1,4 +1,4 @@
-import { Item } from "@/app/api/users/route";
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { startTTH } from "@open-web/react-sdk";
@@ -12,14 +12,13 @@ import {
   where,
 } from "firebase/firestore";
 import { CldUploadWidget } from "next-cloudinary";
-import { Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { logout as OWLogout } from "@open-web/react-sdk";
-import { db } from "@/app/firebase/config";
+import { auth, db } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-
-interface PropfileDataProps {
-  uid: string;
-}
+import { useAuthState } from "react-firebase-hooks/auth";
+import OWProgress from "@/app/components/OWProgress";
+import { OWUser } from "@/app/api/users/[id]/route";
 
 interface CloudinaryResult {
   url: string;
@@ -29,23 +28,137 @@ interface ImageUrlProps {
   url: string;
 }
 
-const ProfileData = ({ uid }: PropfileDataProps) => {
-  const [user, setUser] = useState<Item>({
-    id: "",
-    username: "",
-    email: "",
-    image_url: "",
-  });
-  const [loading, setLoading] = useState(false);
-
+const ProfileData = () => {
+  const [user] = useAuthState(auth);
+  const [dbUser, setDbUser] = useState<OWUser>();
+  const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const router = useRouter();
+
+  const [usernameEdit, setUsernameEdit] = useState(false);
+  const [emailEdit, setEmailEdit] = useState(false);
+  const [displayNameEdit, setDisplayNameEdit] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  const handleUpdateUsername = async () => {
+    if (newUsername) {
+      setUpdateLoading(true);
+      //update username in firestore DB
+      const userRef = doc(db, "users", user?.uid!);
+      await updateDoc(userRef, {
+        username: newUsername,
+      });
+
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // docSnap.data() will be undefined in this case
+        return;
+      }
+
+      //update username on OW API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/update-handshake?username=${newUsername}`,
+        {
+          method: "POST",
+          cache: "no-store",
+          body: JSON.stringify({
+            userId: user?.uid,
+          }),
+        }
+      );
+      foo();
+      setUpdateLoading(false);
+      setUsernameEdit(false);
+    } else {
+      console.log("NO CHANGES!!");
+      setUsernameEdit(false);
+    }
+  };
+
+  const handleUpdateEmail = async () => {
+    if (newEmail) {
+      setUpdateLoading(true);
+      //update email in firestore DB
+      const userRef = doc(db, "users", user?.uid!);
+      await updateDoc(userRef, {
+        email: newEmail,
+      });
+
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // docSnap.data() will be undefined in this case
+        return;
+      }
+
+      // //update email on OW API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/update-handshake?email=${newEmail}`,
+        {
+          method: "POST",
+          cache: "no-store",
+          body: JSON.stringify({
+            userId: user?.uid,
+          }),
+        }
+      );
+      foo();
+      setUpdateLoading(false);
+      setEmailEdit(false);
+    } else {
+      console.log("NO CHANGES!!");
+      setEmailEdit(false);
+    }
+  };
+
+  const handleUpdateDisplayName = async () => {
+    if (newDisplayName) {
+      setUpdateLoading(true);
+      //update display name in firestore DB
+      const userRef = doc(db, "users", user?.uid!);
+      await updateDoc(userRef, {
+        display_name: newDisplayName,
+      });
+
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // docSnap.data() will be undefined in this case
+        return;
+      }
+
+      // //update display name on OW API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/update-handshake?display_name=${newDisplayName}`,
+        {
+          method: "POST",
+          cache: "no-store",
+          body: JSON.stringify({
+            userId: user?.uid,
+          }),
+        }
+      );
+      foo();
+      setUpdateLoading(false);
+      setDisplayNameEdit(false);
+    } else {
+      console.log("NO CHANGES!!");
+      setDisplayNameEdit(false);
+    }
+  };
 
   const updateImgUrl = async ({ url }: ImageUrlProps) => {
     setBtnLoading(true);
     // update doc in firestore
-    const q = query(collection(db, "users"), where("id", "==", uid));
-    const userRef = doc(db, "users", uid!);
+    const q = query(collection(db, "users"), where("id", "==", user?.uid));
+    const userRef = doc(db, "users", user?.uid!);
     await updateDoc(userRef, {
       image_url: url,
     });
@@ -59,100 +172,214 @@ const ProfileData = ({ uid }: PropfileDataProps) => {
     }
 
     const response = await fetch(
-      `https://www.spot.im/api/sso/v1/update-user?primary_key=${
-        docSnap.data().id
-      }&user_name=${docSnap.data().username}&image_url=${
+      `${process.env.NEXT_PUBLIC_API_URL}/api/update-handshake?image_url=${
         docSnap.data().image_url
       }`,
       {
-        method: "GET",
+        method: "POST",
         cache: "no-store",
+        body: JSON.stringify({
+          userId: user?.uid,
+        }),
       }
     );
+
     OWLogout();
     await startTTH({
-      userId: uid,
+      userId: user!.uid,
       performBEDHandshakeCallback: async (codeA: string) => {
-        return handleBEDCallback(codeA, uid);
+        return handleBEDCallback(codeA, user!.uid);
       },
     });
     setBtnLoading(false);
     router.push("/");
   };
 
-  useEffect(() => {
-    const foo = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${uid}`,
-        {
-          cache: "no-store",
-        }
-      );
-
-      if (response.ok) {
-        const tempUser = await response.json();
-        setUser(tempUser);
+  const foo = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${user?.uid}`,
+      {
+        cache: "no-store",
       }
-      setLoading(false);
-    };
-    foo();
-  }, [uid]);
+    );
 
-  if (loading) {
+    if (response.ok) {
+      const tempUser = await response.json();
+      setDbUser(tempUser);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    foo();
+  }, [user?.uid]);
+
+  if (!dbUser) {
     return (
       <div className="w-1/2 m-auto">
-        <p>Loading...</p>
+        <OWProgress />
       </div>
     );
   }
 
   return (
-    <div>
-      <h1 className="roboto-bold text-xl pb-5">User: {user.username}</h1>
-      <p>Email: {user.email}</p>
-      <p></p>
-      <p>User ID (primary key): {uid}</p>
-      <p></p>
-      <p>Avatar:</p>
-      <Image src={user.image_url!} alt={"User Avatar"} width="64" height="64" />
-      <p></p>
-      <CldUploadWidget
-        uploadPreset="zax4qscb"
-        options={{
-          sources: ["local"],
-          multiple: false,
-          maxFiles: 1,
-        }}
-        onSuccess={(result, options) => {
-          if (result.event !== "success") return;
-          const info = result.info as CloudinaryResult;
-          updateImgUrl({ url: info.url });
-        }}
-      >
-        {({ open }) => (
-          <Button
-            disabled={btnLoading ? true : false}
-            onClick={() => open()}
-            variant="outlined"
-            sx={{
-              color: "var(--brand-color)",
-              borderColor: "var(--brand-color)",
-              "&:hover": {
-                backgroundColor: "rgba(150, 113, 174, 0.1)",
-                borderColor: "var(--brand-color)",
-              },
+    <>
+      {loading ? (
+        <OWProgress />
+      ) : (
+        <div>
+          <h1 className="roboto-bold text-xl pb-5 text-center">Profile</h1>
+          <div className="flex-col">
+            <p className="font-bold">
+              Username&emsp;
+              {usernameEdit ? (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => handleUpdateUsername()}
+                >
+                  (save)
+                </Button>
+              ) : (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => setUsernameEdit(true)}
+                >
+                  (change)
+                </Button>
+              )}
+              :
+            </p>
+            {usernameEdit ? (
+              <div className="flex flex-row w-1/2 mb-5 gap-5">
+                <TextField
+                  id="outlined-basic"
+                  label="New Username"
+                  variant="outlined"
+                  onChange={(e) => setNewUsername(e.target.value)}
+                />{" "}
+                {usernameEdit && updateLoading && <OWProgress />}
+              </div>
+            ) : (
+              <p>{dbUser.username}</p>
+            )}
+          </div>
+          <div className="flex-col">
+            <p className="font-bold">
+              Email&emsp;
+              {emailEdit ? (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => handleUpdateEmail()}
+                >
+                  (save)
+                </Button>
+              ) : (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => setEmailEdit(true)}
+                >
+                  (change)
+                </Button>
+              )}
+              :
+            </p>
+            {emailEdit ? (
+              <div className="flex flex-col w-1/2 mb-5 gap-5">
+                <TextField
+                  id="outlined-basic"
+                  label="New Email"
+                  variant="outlined"
+                  onChange={(e) => setNewEmail(e.target.value)}
+                />{" "}
+                {emailEdit && updateLoading && <OWProgress />}
+              </div>
+            ) : (
+              <p>{dbUser.email}</p>
+            )}
+          </div>
+          <div className="flex-col">
+            <p className="font-bold">
+              Display Name&emsp;
+              {displayNameEdit ? (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => handleUpdateDisplayName()}
+                >
+                  (save)
+                </Button>
+              ) : (
+                <Button
+                  className="p-0 underline"
+                  onClick={() => setDisplayNameEdit(true)}
+                >
+                  (change)
+                </Button>
+              )}
+              :
+            </p>
+            {displayNameEdit ? (
+              <div className="flex flex-col w-1/2 mb-5 gap-5">
+                <TextField
+                  id="outlined-basic"
+                  label="New Display Name"
+                  variant="outlined"
+                  onChange={(e) => setNewDisplayName(e.target.value)}
+                />{" "}
+                {displayNameEdit && updateLoading && <OWProgress />}
+              </div>
+            ) : (
+              <p>{dbUser.display_name}</p>
+            )}
+          </div>
+          <p className="font-bold">User ID (primary key):</p>
+          <p>{dbUser.id}</p>
+          <p className="font-bold">Avatar:</p>
+          <Image
+            className="mb-5"
+            src={dbUser.image_url!}
+            alt={"User Avatar"}
+            width="64"
+            height="64"
+          />
+          <CldUploadWidget
+            uploadPreset="zax4qscb"
+            options={{
+              sources: ["local"],
+              multiple: false,
+              maxFiles: 1,
+            }}
+            onSuccess={(result, options) => {
+              if (result.event !== "success") return;
+              const info = result.info as CloudinaryResult;
+              updateImgUrl({ url: info.url });
             }}
           >
-            {btnLoading ? (
-              <CircularProgress color={"inherit"} />
-            ) : (
-              "Upload Image"
+            {({ open }) => (
+              <Button
+                disabled={btnLoading ? true : false}
+                onClick={() => open()}
+                variant="outlined"
+                sx={{
+                  color: "var(--brand-color)",
+                  borderColor: "var(--brand-color)",
+                  "&:hover": {
+                    backgroundColor: "rgba(150, 113, 174, 0.1)",
+                    borderColor: "var(--brand-color)",
+                  },
+                }}
+              >
+                {btnLoading ? (
+                  <CircularProgress color={"inherit"} />
+                ) : (
+                  "Upload Image"
+                )}
+              </Button>
             )}
-          </Button>
-        )}
-      </CldUploadWidget>
-    </div>
+          </CldUploadWidget>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ export type OWUser = {
   email: string;
   username: string;
   image_url: string;
+  display_name: string;
 };
 
 export async function GET(

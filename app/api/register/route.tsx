@@ -1,6 +1,5 @@
 import { db } from "@/app/firebase/config";
 import {
-  addDoc,
   collection,
   doc,
   getDocs,
@@ -9,15 +8,13 @@ import {
   where,
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
-import { Item } from "../users/route";
-import { startTTH } from "@open-web/react-sdk";
-import handleBEDCallback from "@/app/components/SSOhandler";
+import { OWUser } from "../users/[id]/route";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
   const q = query(collection(db, "users"), where("email", "==", body.email));
-  let user: Item = { id: "", username: "", email: "", image_url: "" };
+  let user: OWUser = { id: "", username: "", email: "", image_url: "", display_name: "" };
 
   const response = await getDocs(q).then((querySnapshot) => {
     // querySnapshot.docs.map((doc) => doc.data());
@@ -26,6 +23,7 @@ export async function POST(request: NextRequest) {
       user.id = doc.data().id;
       user.username = doc.data().username;
       user.image_url = doc.data().image_url;
+      user.display_name = doc.data().display_name;
     });
   });
 
@@ -46,7 +44,8 @@ export async function POST(request: NextRequest) {
     email: body.email,
     username: body.username,
     id: body.id,
-    image_url: getRandomAvatar(),
+    display_name: body.display_name,
+    image_url: getRandomAvatar()
   });
 
   return NextResponse.json({

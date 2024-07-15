@@ -34,10 +34,10 @@ export default function Articles() {
           {articles.map((a, key) => {
             return (
               <div key={key}>
-                <OWLink className="capitalize" href={`/articles/${a.id}`}>
+                <OWLink className="capitalize text-xl" href={`/articles/${a.id}`}>
                   {a.id}
                 </OWLink>
-                <h2 className="italic">by {a.author}</h2>
+                <h2 className="italic text-base">by {a.author}</h2>
               </div>
             );
           })}

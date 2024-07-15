@@ -53,21 +53,28 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       }
       setLoading(false);
     };
-    foo();
+    const foo2 = async () => {
+      const post_id = article.id;
+      fetch(
+        `https://open-api.spot.im/v1/messages-count?spot_id=sp_BWykFJiw&posts_ids=${post_id}`,
+        {
+          cache: "no-store",
+        }
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setCount(data.messages_count[post_id]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
-    fetch(
-      "https://open-api.spot.im/v1/messages-count?spot_id=sp_BWykFJiw&posts_ids=index"
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setCount(data.messages_count.index);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [params.slug]);
+    foo();
+    foo2();
+  }, [params.slug, article.id]);
 
   if (allLoading) {
     return (
@@ -119,7 +126,6 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       >
         <h2 className="italic">by {article.author}</h2>
         <OWButton onClick={() => handleAnchor()}>{count} Comments</OWButton>
-        {/* {count} Comments */}
       </Box>
       {htmlParser.parse(article.content)}
 

@@ -36,11 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Image
+        <img
           className="p-4"
           src="https://hitwebcounter.com/counter/counter.php?page=14749641&style=0007&nbdigits=5&type=page&initCount=0"
           title="Counter Widget"
-          alt="Visit counter For Websites" height={9} width={30}
+          alt="Visit counter For Websites"
         />
         <NavBar />
         <div className="flex flex-col justify-center">

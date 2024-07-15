@@ -1,9 +1,11 @@
 "use client";
 import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
+import { startTTH } from "@open-web/react-sdk";
+import handleBEDCallback from "../components/SSOhandler";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +13,7 @@ const SignInPage = () => {
   const [SignInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [user] = useAuthState(auth);
   const router = useRouter();
 
   const handleSignIn = async () => {
