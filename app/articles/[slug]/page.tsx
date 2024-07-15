@@ -5,7 +5,7 @@ import OWProgress from "@/app/components/OWProgress";
 import handleBEDCallback from "@/app/components/SSOhandler";
 import { auth } from "@/app/firebase/config";
 import { Box } from "@mui/material";
-import { Conversation, OpenWebProvider, startTTH } from "@open-web/react-sdk";
+import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,14 +13,21 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OWLink from "@/app/components/OWLink";
 import { Parser } from "html-to-react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Image from "next/image";
 
-export default function ArticlePost({ params }: { params: { slug: string } }) {
+type Props = {
+  params: { slug: string };
+};
+
+export default function ArticlePost({ params }: Props) {
   const [article, setArticle] = useState<Article>({
     id: "",
     content: "",
     author: "",
     published: "",
     title: "",
+    keywords: [],
+    image_url: "",
   });
   const [count, setCount] = useState("");
   const [allLoading, setLoading] = useState(true);
@@ -130,18 +137,32 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       </Box>
       {htmlParser.parse(article.content)}
 
-      {user && (owReady ? (<div id="olivias-convo" className="pb-28">
-        <Conversation
-          postId={`${article.id}`}
-          postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
-        />
-      </div>) : <div className="flex flex row justify-center"><OWProgress /></div>)}
-      {!user && (owReady ? (<div id="olivias-convo" className="pb-28">
-        <Conversation
-          postId={`${article.id}`}
-          postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
-        />
-      </div>) : <div className="flex flex row justify-center"><OWProgress /></div>)}
+      {user &&
+        (owReady ? (
+          <div id="olivias-convo" className="pb-28">
+            <Conversation
+              postId={`${article.id}`}
+              postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
+            />
+          </div>
+        ) : (
+          <div className="flex flex row justify-center">
+            <OWProgress />
+          </div>
+        ))}
+      {!user &&
+        (owReady ? (
+          <div id="olivias-convo" className="pb-28">
+            <Conversation
+              postId={`${article.id}`}
+              postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
+            />
+          </div>
+        ) : (
+          <div className="flex flex row justify-center">
+            <OWProgress />
+          </div>
+        ))}
     </OpenWebProvider>
   );
 }

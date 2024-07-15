@@ -17,6 +17,11 @@ const nextConfig = {
                 hostname: 'hitwebcounter.com',
                 pathname: '**',
               },
+              {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
+                pathname: '**',
+              },
           ],
       },
 };

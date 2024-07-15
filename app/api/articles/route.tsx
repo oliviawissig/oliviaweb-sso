@@ -8,6 +8,8 @@ export type Article = {
   author: string;
   published: string;
   title: string;
+  keywords: string []; 
+  image_url: string;
 };
 
 export async function GET(request: NextRequest) {
@@ -23,12 +25,16 @@ export async function GET(request: NextRequest) {
         author: '',
         published: '',
         title: '',
+        keywords: [],
+        image_url: ''
       };
       articleData.id = doc.data().id;
       articleData.content = doc.data().content;
       articleData.author = doc.data().author;
       articleData.title = doc.data().title;
       articleData.published = doc.data().published;
+      articleData.keywords = doc.data().keywords;
+      articleData.image_url = doc.data().image_url;
       articles.push(articleData);
     });
   });
