@@ -3,7 +3,7 @@ import React from "react";
 const GuidelinesPage = () => {
   return (
     <div className="mb-32">
-      <h1>Community Guidelines</h1>
+      <h1 className="text-center">Community Guidelines</h1>
       <h2>Welcome to OliviaWeb SSO Community!</h2>
       <p>
         Our community is about connecting people through open and thoughtful

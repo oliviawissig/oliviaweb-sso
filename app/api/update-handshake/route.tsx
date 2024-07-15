@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(
       `https://www.spot.im/api/sso/v1/update-user?primary_key=${
         tempUser.id
-      }&user_name=${tempUser.username}&email=${searchParams.get("email")}`,
+      }&user_name=${tempUser.username}&email=${searchParams.get("email")}&email_verified=true`,
       {
         method: "GET",
         cache: "no-store",

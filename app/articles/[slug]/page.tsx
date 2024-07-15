@@ -5,13 +5,14 @@ import OWProgress from "@/app/components/OWProgress";
 import handleBEDCallback from "@/app/components/SSOhandler";
 import { auth } from "@/app/firebase/config";
 import { Box } from "@mui/material";
-import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
+import { Conversation, OpenWebProvider, startTTH } from "@open-web/react-sdk";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OWLink from "@/app/components/OWLink";
 import { Parser } from "html-to-react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function ArticlePost({ params }: { params: { slug: string } }) {
   const [article, setArticle] = useState<Article>({
@@ -26,6 +27,7 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const [owReady, setOwReady] = useState(true);
   const htmlParser = Parser();
+  const [user] = useAuthState(auth);
 
   const handleLogin = () => {
     router.push("/signin");
@@ -71,7 +73,6 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
           console.log(err);
         });
     };
-
     foo();
     foo2();
   }, [params.slug, article.id]);
@@ -88,23 +89,23 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
     <OpenWebProvider
       spotId="sp_BWykFJiw"
       authentication={{
-        userId: auth.currentUser?.uid,
+        userId: user?.uid,
         performBEDHandshakeCallback: async (codeA: string) => {
           setOwReady(false);
-          const userId = auth.currentUser?.uid || "";
+          const userId = user?.uid || "";
           const BEDcallback = await handleBEDCallback(codeA, userId);
           setOwReady(true);
           return BEDcallback;
         },
       }}
       tracking={{
-        ["spot-im-login-start"]: (event) => {
+        ["spot-im-login-start"]: () => {
           handleLogin();
         },
-        ["spot-im-signup-start"]: (event) => {
+        ["spot-im-signup-start"]: () => {
           handleSignUp();
         },
-        ["spot-im-user-logout"]: (event) => {
+        ["spot-im-user-logout"]: () => {
           signOut(auth);
           sessionStorage.removeItem("user");
         },
@@ -129,12 +130,18 @@ export default function ArticlePost({ params }: { params: { slug: string } }) {
       </Box>
       {htmlParser.parse(article.content)}
 
-      <div id="olivias-convo" className="pb-28">
+      {user && (owReady ? (<div id="olivias-convo" className="pb-28">
         <Conversation
           postId={`${article.id}`}
           postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
         />
-      </div>
+      </div>) : <div className="flex flex row justify-center"><OWProgress /></div>)}
+      {!user && (owReady ? (<div id="olivias-convo" className="pb-28">
+        <Conversation
+          postId={`${article.id}`}
+          postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
+        />
+      </div>) : <div className="flex flex row justify-center"><OWProgress /></div>)}
     </OpenWebProvider>
   );
 }

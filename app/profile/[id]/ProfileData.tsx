@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import OWProgress from "@/app/components/OWProgress";
 import { OWUser } from "@/app/api/users/[id]/route";
+import { updateEmail } from "firebase/auth";
 
 interface CloudinaryResult {
   url: string;
@@ -28,7 +29,11 @@ interface ImageUrlProps {
   url: string;
 }
 
-const ProfileData = () => {
+interface ProfileDataProps {
+  id: string;
+}
+
+const ProfileData = ({ id }: ProfileDataProps) => {
   const [user] = useAuthState(auth);
   const [dbUser, setDbUser] = useState<OWUser>();
   const [loading, setLoading] = useState(true);
@@ -83,6 +88,13 @@ const ProfileData = () => {
   const handleUpdateEmail = async () => {
     if (newEmail) {
       setUpdateLoading(true);
+      //update email in firestore auth
+      updateEmail(auth.currentUser!, newEmail).then(() => {
+        console.log("EMAIL UPDATE SUCCESS");
+      }).catch((error) => {
+        console.log("EMAIL UPDATE FAIL");
+      });
+
       //update email in firestore DB
       const userRef = doc(db, "users", user?.uid!);
       await updateDoc(userRef, {
@@ -206,7 +218,11 @@ const ProfileData = () => {
 
     if (response.ok) {
       const tempUser = await response.json();
-      setDbUser(tempUser);
+      if(id != tempUser.id){
+        router.push('/404')
+      }else{
+        setDbUser(tempUser);
+      }
     }
     setLoading(false);
   };
@@ -238,7 +254,7 @@ const ProfileData = () => {
                   className="p-0 underline"
                   onClick={() => handleUpdateUsername()}
                 >
-                  (save)
+                  {newUsername !== "" ? ("save") : ("cancel")}
                 </Button>
               ) : (
                 <Button
@@ -272,7 +288,7 @@ const ProfileData = () => {
                   className="p-0 underline"
                   onClick={() => handleUpdateEmail()}
                 >
-                  (save)
+                  {newEmail !== "" ? ("save") : ("cancel")}
                 </Button>
               ) : (
                 <Button
@@ -306,7 +322,7 @@ const ProfileData = () => {
                   className="p-0 underline"
                   onClick={() => handleUpdateDisplayName()}
                 >
-                  (save)
+                  {newDisplayName !== "" ? ("save") : ("cancel")}
                 </Button>
               ) : (
                 <Button
