@@ -2,8 +2,11 @@
 import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
+import { auth, db } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { deleteUser } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { OWUser } from "../api/users/[id]/route";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -20,19 +23,74 @@ const RegisterPage = () => {
     setLoading(true);
     setError("");
 
+    const q = query(collection(db, "users"), where("email", "==", email));
+    let user: OWUser = {
+      id: "",
+      username: "",
+      email: "",
+      image_url: "",
+      display_name: "",
+    };
+
+    const response = await getDocs(q).then((querySnapshot) => {
+      // querySnapshot.docs.map((doc) => doc.data());
+      querySnapshot.docs.map((doc) => {
+        user.email = doc.data().email;
+        user.id = doc.data().id;
+        user.username = doc.data().username;
+        user.image_url = doc.data().image_url;
+        user.display_name = doc.data().display_name;
+      });
+    });
+
+    if (user.id !== "") {
+      setError("User with email already exists");
+      setLoading(false);
+      return;
+    }
+
+    const q2 = query(
+      collection(db, "users"),
+      where("username", "==", username)
+    );
+    user = {
+      id: "",
+      username: "",
+      email: "",
+      image_url: "",
+      display_name: "",
+    };
+
+    const response2 = await getDocs(q2).then((querySnapshot) => {
+      // querySnapshot.docs.map((doc) => doc.data());
+      querySnapshot.docs.map((doc) => {
+        user.email = doc.data().email;
+        user.id = doc.data().id;
+        user.username = doc.data().username;
+        user.image_url = doc.data().image_url;
+        user.display_name = doc.data().display_name;
+      });
+    });
+
+    if (user.id !== "") {
+      setError("User with username already exists");
+      setLoading(false);
+      return;
+    }
+
     const res = await createUserWithEmailAndPassword(email, password);
     if (!res) {
       setLoading(false);
       setError("Cannot create a user with those credentials");
     } else {
-      let userData = {
+      const userData = {
         email: email,
         username: username,
         id: res.user.uid,
-        display_name: displayName
+        display_name: displayName,
       };
 
-      const response = await fetch(
+      const response3 = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/register`,
         {
           method: "POST",
@@ -42,7 +100,7 @@ const RegisterPage = () => {
       );
 
       setLoading(false);
-      if (response.ok) {
+      if (response3.ok) {
         //clear form
         sessionStorage.setItem("userId", res.user.uid);
         setEmail("");
@@ -51,7 +109,7 @@ const RegisterPage = () => {
         setDisplayName("");
         router.push("/");
       } else {
-        setError(response.statusText);
+        setError(response3.statusText);
       }
     }
   };

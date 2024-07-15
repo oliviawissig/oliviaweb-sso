@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { startTTH } from "@open-web/react-sdk";
-import handleBEDCallback from "@/app/components/SSOhandler";
 import {
   collection,
   doc,
@@ -12,8 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { CldUploadWidget } from "next-cloudinary";
-import { Box, Button, CircularProgress, TextField } from "@mui/material";
-import { logout as OWLogout } from "@open-web/react-sdk";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { auth, db } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -89,11 +86,13 @@ const ProfileData = ({ id }: ProfileDataProps) => {
     if (newEmail) {
       setUpdateLoading(true);
       //update email in firestore auth
-      updateEmail(auth.currentUser!, newEmail).then(() => {
-        console.log("EMAIL UPDATE SUCCESS");
-      }).catch((error) => {
-        console.log("EMAIL UPDATE FAIL");
-      });
+      updateEmail(auth.currentUser!, newEmail)
+        .then(() => {
+          console.log("EMAIL UPDATE SUCCESS");
+        })
+        .catch((error) => {
+          console.log("EMAIL UPDATE FAIL");
+        });
 
       //update email in firestore DB
       const userRef = doc(db, "users", user?.uid!);
@@ -196,13 +195,6 @@ const ProfileData = ({ id }: ProfileDataProps) => {
       }
     );
 
-    OWLogout();
-    await startTTH({
-      userId: user!.uid,
-      performBEDHandshakeCallback: async (codeA: string) => {
-        return handleBEDCallback(codeA, user!.uid);
-      },
-    });
     setBtnLoading(false);
     router.push("/");
   };
@@ -218,9 +210,9 @@ const ProfileData = ({ id }: ProfileDataProps) => {
 
     if (response.ok) {
       const tempUser = await response.json();
-      if(id != tempUser.id){
-        router.push('/404')
-      }else{
+      if (id != tempUser.id) {
+        router.push("/404");
+      } else {
         setDbUser(tempUser);
       }
     }
@@ -254,7 +246,7 @@ const ProfileData = ({ id }: ProfileDataProps) => {
                   className="p-0 underline"
                   onClick={() => handleUpdateUsername()}
                 >
-                  {newUsername !== "" ? ("save") : ("cancel")}
+                  {newUsername !== "" ? "save" : "cancel"}
                 </Button>
               ) : (
                 <Button
@@ -288,7 +280,7 @@ const ProfileData = ({ id }: ProfileDataProps) => {
                   className="p-0 underline"
                   onClick={() => handleUpdateEmail()}
                 >
-                  {newEmail !== "" ? ("save") : ("cancel")}
+                  {newEmail !== "" ? "save" : "cancel"}
                 </Button>
               ) : (
                 <Button
@@ -322,7 +314,7 @@ const ProfileData = ({ id }: ProfileDataProps) => {
                   className="p-0 underline"
                   onClick={() => handleUpdateDisplayName()}
                 >
-                  {newDisplayName !== "" ? ("save") : ("cancel")}
+                  {newDisplayName !== "" ? "save" : "cancel"}
                 </Button>
               ) : (
                 <Button

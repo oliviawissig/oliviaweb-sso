@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from 'next/image';
 import { Inter } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";

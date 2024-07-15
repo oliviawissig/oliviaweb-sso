@@ -1,4 +1,3 @@
-import Link from "next/link";
 import "@/app/globals.css";
 import OWLink from "./components/OWLink";
 
