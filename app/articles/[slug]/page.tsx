@@ -13,7 +13,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OWLink from "@/app/components/OWLink";
 import { Parser } from "html-to-react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Image from "next/image";
 
 type Props = {
   params: { slug: string };
