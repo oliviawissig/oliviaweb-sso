@@ -4,7 +4,7 @@ import OWButton from "@/app/components/OWButton";
 import OWProgress from "@/app/components/OWProgress";
 import handleBEDCallback from "@/app/components/SSOhandler";
 import { auth } from "@/app/firebase/config";
-import { Box } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import { Conversation, OpenWebProvider } from "@open-web/react-sdk";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OWLink from "@/app/components/OWLink";
 import { Parser } from "html-to-react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { AutoAwesome } from "@mui/icons-material";
 
 type Props = {
   params: { slug: string };
@@ -61,6 +62,11 @@ export default function ArticlePost({ params }: Props) {
       }
       setLoading(false);
     };
+
+    foo();
+  }, []);
+
+  useEffect(() => {
     const foo2 = async () => {
       const post_id = article.id;
       fetch(
@@ -79,9 +85,8 @@ export default function ArticlePost({ params }: Props) {
           console.log(err);
         });
     };
-    foo();
     foo2();
-  }, [params.slug, article.id]);
+  }, [article.id]);
 
   if (allLoading) {
     return (
@@ -135,6 +140,13 @@ export default function ArticlePost({ params }: Props) {
         <OWButton onClick={() => handleAnchor()}>{count} Comments</OWButton>
       </Box>
       {htmlParser.parse(article.content)}
+
+      <Chip
+        icon={<AutoAwesome />}
+        label='This article title & body were generated with ChatGPT. Based on the author that is inspired by the show "The X Files".'
+        variant="outlined"
+        color="primary"
+      />
 
       {user &&
         (owReady ? (

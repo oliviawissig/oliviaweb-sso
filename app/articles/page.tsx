@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import OWLink from "../components/OWLink";
 import { Article } from "../api/articles/route";
 import OWProgress from "../components/OWProgress";
+import { AutoAwesome } from "@mui/icons-material";
+import { Chip } from "@mui/material";
 
 export default function Articles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -23,7 +25,6 @@ export default function Articles() {
     foo();
   }, []);
 
-
   return (
     <>
       <h1 className="text-center">Articles</h1>
@@ -34,13 +35,22 @@ export default function Articles() {
           {articles.map((a, key) => {
             return (
               <div key={key}>
-                <OWLink className="capitalize text-xl" href={`/articles/${a.id}`}>
+                <OWLink
+                  className="capitalize text-xl"
+                  href={`/articles/${a.id}`}
+                >
                   {a.id}
                 </OWLink>
                 <h2 className="italic text-base">by {a.author}</h2>
               </div>
             );
           })}
+          <Chip
+            icon={<AutoAwesome />}
+            label="These article titles & body were generated with ChatGPT. Based on the authors that are inspired by the show &quot;The X Files&quot;."
+            variant="outlined"
+            color="primary"
+          />
         </div>
       )}
     </>
