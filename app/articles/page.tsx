@@ -5,6 +5,7 @@ import { Article } from "../api/articles/route";
 import OWProgress from "../components/OWProgress";
 import { AutoAwesome } from "@mui/icons-material";
 import { Chip } from "@mui/material";
+import { MessagesCount } from "@open-web/react-sdk";
 
 export default function Articles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -41,13 +42,16 @@ export default function Articles() {
                 >
                   {a.id}
                 </OWLink>
-                <h2 className="italic text-base">by {a.author}</h2>
+                <h2 className="italic text-base mb-0">by {a.author}</h2>
+                <p className="mt-0 text-[14px] text-slate-500">
+                  <MessagesCount spotId="sp_BWykFJiw" postId={a.id}/> Comments
+                </p>
               </div>
             );
           })}
           <Chip
             icon={<AutoAwesome />}
-            label="These article titles & body were generated with ChatGPT. Based on the authors that are inspired by the show &quot;The X Files&quot;."
+            label='These article titles & body were generated with ChatGPT using characters from the show "The X Files".'
             variant="outlined"
             color="primary"
           />

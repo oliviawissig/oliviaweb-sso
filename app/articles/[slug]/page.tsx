@@ -143,7 +143,7 @@ export default function ArticlePost({ params }: Props) {
 
       <Chip
         icon={<AutoAwesome />}
-        label='This article title & body were generated with ChatGPT. Based on the author that is inspired by the show "The X Files".'
+        label="These article titles & body were generated with ChatGPT using characters from the show &quot;The X Files&quot;."
         variant="outlined"
         color="primary"
       />

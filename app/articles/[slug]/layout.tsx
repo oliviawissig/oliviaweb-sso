@@ -24,6 +24,7 @@ export async function generateMetadata(
     title: tempArticle.title,
     keywords: tempArticle.keywords,
     authors: [{ name: tempArticle.author }],
+    description: `An article about ${tempArticle.title}`,
     openGraph: {
       title: tempArticle.title,
       authors: [tempArticle.author],
