@@ -13,7 +13,7 @@ export default function Home() {
         OpenWeb can support one of two types of registration flows:
       </p>
       <h2 className="font-medium mt-5">
-        OpenWeb's Built-in Registration Flow (nonSSO)
+        OpenWeb&apos;s Built-in Registration Flow (nonSSO)
       </h2>
       <ul className="p-3">
         <li className="p-3">
@@ -26,13 +26,13 @@ export default function Home() {
           works once Conversation is implemented.
         </li>
       </ul>
-      <p>Here are some examples of OpenWeb's nonSSO registration flow:</p>
+      <p>Here are some examples of OpenWeb&apos;s nonSSO registration flow:</p>
       <ul className="pb-5 p-3">
         <li>
           <OWLink href="https://www.spotim.name/Olivia/OliviaWeb/plants.html">
             OliviaWeb
           </OWLink>{" "}
-          (Olivia's nonSSO test site)
+          (Olivia&apos;s nonSSO test site)
         </li>
         <li>
           <OWLink href="https://www.thedrive.com/news/oscar-mayer-wienermobile-shuts-down-chicago-highway-after-crashing-into-a-car-and-rolling-over">
@@ -47,13 +47,13 @@ export default function Home() {
       </ul>
       <p className="leading-7">
         Notice the behavior when a user goes to log in or register with OpenWeb.
-        On publisher sites with OpenWeb's built-in registration flow (nonSSO),
+        On publisher sites with OpenWeb&apos;s built-in registration flow (nonSSO),
         the user is presented with the same OpenWeb popup modal for all sites.
         This is how the registration flow will appear for all sites using this
         method because OpenWeb is providing the functionality.
       </p>
       <h2 className="font-medium mt-20">
-        Integrate with Publisher's Existing Registration Flow (SSO)
+        Integrate with Publisher&apos;s Existing Registration Flow (SSO)
       </h2>
       <ul className="p-3">
         <li className="p-3">
@@ -67,7 +67,7 @@ export default function Home() {
           so please reach out to sales engineering for proper expecations.
         </li>
       </ul>
-      <p>Here are some examples of publisher's SSO registration flow:</p>
+      <p>Here are some examples of publisher&apos;s SSO registration flow:</p>
       <ul className="pb-5 p-3">
         <li>
           <OWLink href="https://oliviaweb.oliviawissig.com/">
@@ -93,9 +93,9 @@ export default function Home() {
       </ul>
       <p className="leading-7">
         Now, notice the difference in behavior when a user logs in or registers
-        with OpenWeb. On publisher sites where they've integrated OpenWeb with
+        with OpenWeb. On publisher sites where they&apos;ve integrated OpenWeb with
         their own user management system (SSO), the user is instead presented
-        with the publisher's sign in and sign up flow. This means the
+        with the publisher&apos;s sign in and sign up flow. This means the
         registration modal (or separate page) will appear different for each of
         these sites because the publisher owns and manages the functionality.
       </p>
