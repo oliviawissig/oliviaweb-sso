@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import { Url } from "url";
 
 interface OWLinkProps {
   href: string;
@@ -10,7 +9,7 @@ interface OWLinkProps {
 }
 export default function OWLink({ href, children, className }: OWLinkProps) {
   return (
-    <Link href={href} className={`underline text-[#9671AE] ${className}`} color="secondary">
+    <Link href={href} className={`underline text-[#9671AE] ${className}`} style={{ color: "var(--brand-color)"}}>
       {children}
     </Link>
   );

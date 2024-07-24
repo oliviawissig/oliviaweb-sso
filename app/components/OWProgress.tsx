@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
 
 export default function OWProgress() {
-  return <CircularProgress color="secondary" />;
+  return <CircularProgress style={{ color: "var(--brand-color)"}} />;
 }

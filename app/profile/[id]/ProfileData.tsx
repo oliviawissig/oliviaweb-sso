@@ -17,6 +17,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import OWProgress from "@/app/components/OWProgress";
 import { OWUser } from "@/app/api/users/[id]/route";
 import { updateEmail } from "firebase/auth";
+import OWButton from "@/app/components/OWButton";
+import ImageIcon from '@mui/icons-material/Image';
 
 interface CloudinaryResult {
   url: string;
@@ -237,7 +239,7 @@ const ProfileData = ({ id }: ProfileDataProps) => {
         <OWProgress />
       ) : (
         <div>
-          <h1 className="roboto-bold text-xl pb-5 text-center">Profile</h1>
+          <h1 className="text-center">Your Profile</h1>
           <div className="flex-col">
             <p className="font-bold">
               Username&emsp;
@@ -364,25 +366,17 @@ const ProfileData = ({ id }: ProfileDataProps) => {
             }}
           >
             {({ open }) => (
-              <Button
+              <OWButton
                 disabled={btnLoading ? true : false}
-                onClick={() => open()}
-                variant="outlined"
-                sx={{
-                  color: "var(--brand-color)",
-                  borderColor: "var(--brand-color)",
-                  "&:hover": {
-                    backgroundColor: "rgba(150, 113, 174, 0.1)",
-                    borderColor: "var(--brand-color)",
-                  },
-                }}
+                onClick={() => open()} 
+                startIcon={<ImageIcon />}
               >
                 {btnLoading ? (
                   <CircularProgress color={"inherit"} />
                 ) : (
                   "Upload Image"
                 )}
-              </Button>
+              </OWButton>
             )}
           </CldUploadWidget>
         </div>
