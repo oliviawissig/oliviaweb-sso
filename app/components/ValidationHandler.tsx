@@ -69,7 +69,7 @@ export async function verifyUsername(username: string) {
   }
 
   // Check for special characters
-  const specialCharRegex = /[<>!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const specialCharRegex = /[<>!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;
   if (specialCharRegex.test(username)) {
     return "Username cannot have special characters";
   }
