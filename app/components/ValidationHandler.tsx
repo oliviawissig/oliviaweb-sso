@@ -116,7 +116,7 @@ export async function verifyEmail(email: string) {
   //1. CHECK IF EMAIL IS CORRECT FORMAT
   //////////////////////////////////////////////////
   // Regular expression for validating email format
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return "Email is not in the correct format";
   }
