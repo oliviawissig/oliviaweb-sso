@@ -159,6 +159,7 @@ export default function ArticlePost({ params }: Props) {
             <Conversation
               postId={`${article.id}`}
               postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
+              data-messages-count={5}
             />
           </div>
         ) : (
@@ -172,6 +173,7 @@ export default function ArticlePost({ params }: Props) {
             <Conversation
               postId={`${article.id}`}
               postUrl={`http://oliviaweb.oliviawissig.com/articles/${article.id}`}
+              data-messages-count={5}
             />
           </div>
         ) : (
