@@ -9,7 +9,7 @@ export async function verifyDisplayName(displayName: string) {
   //////////////////////////////////////////////////
 
   // Check if the string length exceeds 30 characters
-  if (displayName.length > 30 || displayName.length < 3) {
+  if (displayName.length > 30 || displayName.length < 2) {
     return "Display Name cannot exceed 30 characters, and must be more than 3";
   }
 
@@ -69,7 +69,7 @@ export async function verifyUsername(username: string) {
   }
 
   // Check for special characters
-  const specialCharRegex = /[<>!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const specialCharRegex = /[<>!@#$%^&*()+\-=\[\]{};':"\\|,<>\/?]+/;
   if (specialCharRegex.test(username)) {
     return "Username cannot have special characters";
   }
