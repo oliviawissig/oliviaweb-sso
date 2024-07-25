@@ -26,6 +26,7 @@ export default function Articles() {
     foo();
   }, []);
 
+
   return (
     <>
       <h1 className="text-center">Articles</h1>

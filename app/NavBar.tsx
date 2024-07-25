@@ -42,12 +42,12 @@ const NavBar = () => {
       </Typography>
       <Divider />
       <List>
-        <ListItem disablePadding>
+        <ListItem disablePadding sx={{textTransform: "none"}}>
           <ListItemButton
-            sx={{ textAlign: "center" }}
+            sx={{ textAlign: "center", textTransform: "none" }}
             onClick={() => router.push("/")}
           >
-            <ListItemText primary="Home" />
+            <ListItemText primary="Home" sx={{textTransform: "none"}}/>
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -88,11 +88,11 @@ const NavBar = () => {
             OliviaWeb
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button sx={{ color: "#fff" }} onClick={() => router.push("/")}>
+            <Button sx={{ color: "#fff",  textTransform: "none" }} onClick={() => router.push("/")}>
               Home
             </Button>
             <Button
-              sx={{ color: "#fff" }}
+              sx={{ color: "#fff",  textTransform: "none" }}
               onClick={() => router.push("/articles")}
             >
               Articles
@@ -101,7 +101,7 @@ const NavBar = () => {
             {loading ? (
               <>
                 &ensp;||&ensp;
-                <CircularProgress sx={{ color: "white" }} size="25px" />
+                <CircularProgress sx={{ paddingLeft:"8px", color: "white" }} size="22px" />
               </>
             ) : (
               <>
@@ -109,7 +109,7 @@ const NavBar = () => {
                   <>
                     &ensp;||&ensp;
                     <Button
-                      sx={{ color: "#fff" }}
+                      sx={{ color: "#fff",  textTransform: "none" }}
                       onClick={() => {
                         router.push("/profile/" + user?.uid);
                       }}
@@ -117,7 +117,7 @@ const NavBar = () => {
                       Profile
                     </Button>
                     <Button
-                      sx={{ color: "#fff" }}
+                      sx={{ color: "#fff",  textTransform: "none" }}
                       onClick={() => {
                         router.push("/");
                         OWlogout();
@@ -132,13 +132,13 @@ const NavBar = () => {
                   <>
                     &ensp;||&ensp;
                     <Button
-                      sx={{ color: "#fff" }}
+                      sx={{ color: "#fff",  textTransform: "none" }}
                       onClick={() => router.push("/register")}
                     >
                       Register
                     </Button>
                     <Button
-                      sx={{ color: "#fff" }}
+                      sx={{ color: "#fff",  textTransform: "none" }}
                       onClick={() => router.push("/signin")}
                     >
                       Sign In

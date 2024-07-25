@@ -1,5 +1,4 @@
-import { QuestionAnswer } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Icon } from "@mui/material";
 import { ReactNode } from "react";
 
 interface OWButtonProps {
@@ -14,9 +13,10 @@ export default function OWButton(props: OWButtonProps) {
     <Button
       onClick={props.onClick}
       variant="contained"
-      startIcon={props.startIcon || <QuestionAnswer />}
+      startIcon={props.startIcon || <Icon />}
       sx={{
         backgroundColor: "var(--brand-color)",
+        textTransform: "none",
         "&:hover": {
           backgroundColor: "#87659c",
         },

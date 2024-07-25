@@ -18,7 +18,9 @@ import OWProgress from "@/app/components/OWProgress";
 import { OWUser } from "@/app/api/users/[id]/route";
 import { updateEmail } from "firebase/auth";
 import OWButton from "@/app/components/OWButton";
-import ImageIcon from '@mui/icons-material/Image';
+import ImageIcon from "@mui/icons-material/Image";
+import { logout as OWLogout, startTTH } from "@open-web/react-sdk";
+import handleBEDCallback from "@/app/components/SSOhandler";
 
 interface CloudinaryResult {
   url: string;
@@ -196,6 +198,13 @@ const ProfileData = ({ id }: ProfileDataProps) => {
         }),
       }
     );
+    OWLogout();
+    await startTTH({
+      userId: user!.uid,
+      performBEDHandshakeCallback: async (codeA: string) => {
+        return handleBEDCallback(codeA, user!.uid);
+      },
+    });
 
     setBtnLoading(false);
     router.push("/");
@@ -368,7 +377,7 @@ const ProfileData = ({ id }: ProfileDataProps) => {
             {({ open }) => (
               <OWButton
                 disabled={btnLoading ? true : false}
-                onClick={() => open()} 
+                onClick={() => open()}
                 startIcon={<ImageIcon />}
               >
                 {btnLoading ? (

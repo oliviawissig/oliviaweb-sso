@@ -13,7 +13,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OWLink from "@/app/components/OWLink";
 import { Parser } from "html-to-react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { AutoAwesome } from "@mui/icons-material";
+import { AutoAwesome, MarkUnreadChatAlt } from "@mui/icons-material";
 
 type Props = {
   params: { slug: string };
@@ -137,13 +137,18 @@ export default function ArticlePost({ params }: Props) {
         alignItems={"baseline"}
       >
         <h2 className="italic">by {article.author}</h2>
-        <OWButton onClick={() => handleAnchor()}>{count} Comments</OWButton>
+        <OWButton
+          startIcon={<MarkUnreadChatAlt />}
+          onClick={() => handleAnchor()}
+        >
+          {(count == "1") ? `${count} COMMENT` : `${count} COMMENTS`}
+        </OWButton>
       </Box>
       {htmlParser.parse(article.content)}
 
       <Chip
         icon={<AutoAwesome />}
-        label="These article titles & body were generated with ChatGPT using characters from the show &quot;The X Files&quot;."
+        label='These article titles & body were generated with ChatGPT using characters from the show "The X Files".'
         variant="outlined"
         color="primary"
       />

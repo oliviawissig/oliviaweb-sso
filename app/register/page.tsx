@@ -7,6 +7,14 @@ import { useRouter } from "next/navigation";
 import { deleteUser } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { OWUser } from "../api/users/[id]/route";
+import OWTextField from "../components/OWTextField";
+import OWButton from "../components/OWButton";
+import { ArrowForward } from "@mui/icons-material";
+import {
+  verifyEmail,
+  verifyDisplayName,
+  verifyUsername,
+} from "../components/ValidationHandler";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -23,61 +31,30 @@ const RegisterPage = () => {
     setLoading(true);
     setError("");
 
-    const q = query(collection(db, "users"), where("email", "==", email));
-    let user: OWUser = {
-      id: "",
-      username: "",
-      email: "",
-      image_url: "",
-      display_name: "",
-    };
-
-    const response = await getDocs(q).then((querySnapshot) => {
-      // querySnapshot.docs.map((doc) => doc.data());
-      querySnapshot.docs.map((doc) => {
-        user.email = doc.data().email;
-        user.id = doc.data().id;
-        user.username = doc.data().username;
-        user.image_url = doc.data().image_url;
-        user.display_name = doc.data().display_name;
-      });
-    });
-
-    if (user.id !== "") {
-      setError("User with email already exists");
+    const emailResMsg = await verifyEmail(email);
+    if (emailResMsg != "success") {
+      setError(emailResMsg);
       setLoading(false);
       return;
     }
 
-    const q2 = query(
-      collection(db, "users"),
-      where("username", "==", username)
-    );
-    user = {
-      id: "",
-      username: "",
-      email: "",
-      image_url: "",
-      display_name: "",
-    };
-
-    const response2 = await getDocs(q2).then((querySnapshot) => {
-      // querySnapshot.docs.map((doc) => doc.data());
-      querySnapshot.docs.map((doc) => {
-        user.email = doc.data().email;
-        user.id = doc.data().id;
-        user.username = doc.data().username;
-        user.image_url = doc.data().image_url;
-        user.display_name = doc.data().display_name;
-      });
-    });
-
-    if (user.id !== "") {
-      setError("User with username already exists");
+    const usernameResMsg = await verifyUsername(username);
+    if (usernameResMsg != "success") {
+      setError(usernameResMsg);
       setLoading(false);
       return;
     }
 
+    const displayNameResMsg = await verifyDisplayName(displayName);
+    if (displayNameResMsg != "success") {
+      setError(displayNameResMsg);
+      setLoading(false);
+      return;
+    }
+
+    //////////////////////////////////////////////////
+    //ATTEMPT TO CREATE USER
+    //////////////////////////////////////////////////
     const res = await createUserWithEmailAndPassword(email, password);
     if (!res) {
       setLoading(false);
@@ -127,32 +104,28 @@ const RegisterPage = () => {
         className="flex flex-col"
         rowGap={3}
       >
-        <TextField
-          required
+        <OWTextField
           id="outlined-basic"
           label="Email"
           variant="outlined"
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <TextField
-          required
+        <OWTextField
           id="outlined-basic"
           label="Username"
           variant="outlined"
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <TextField
-          required
+        <OWTextField
           id="outlined-basic"
           label="Display Name"
           variant="outlined"
           onChange={(e) => setDisplayName(e.target.value)}
         />
 
-        <TextField
-          required
+        <OWTextField
           id="outlined-basic"
           label="Password"
           variant="outlined"
@@ -162,13 +135,13 @@ const RegisterPage = () => {
         {error && <Alert severity="error">Error creating user! {error}</Alert>}
 
         <div className="m-auto">
-          <Button onClick={() => handleSignUp()} variant="contained">
+          <OWButton startIcon={<ArrowForward />} onClick={() => handleSignUp()}>
             {overallLoading ? (
               <CircularProgress disableShrink color="inherit" size={30} />
             ) : (
               "Register"
             )}
-          </Button>
+          </OWButton>
         </div>
       </Box>
     </div>
