@@ -22,7 +22,6 @@ import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { logout as OWlogout } from "@open-web/react-sdk";
 import MenuIcon from "@mui/icons-material/Menu";
-import OWProgress from "./components/OWProgress";
 
 const NavBar = () => {
   const [user, loading] = useAuthState(auth);
@@ -42,12 +41,12 @@ const NavBar = () => {
       </Typography>
       <Divider />
       <List>
-        <ListItem disablePadding sx={{textTransform: "none"}}>
+        <ListItem disablePadding sx={{ textTransform: "none" }}>
           <ListItemButton
             sx={{ textAlign: "center", textTransform: "none" }}
             onClick={() => router.push("/")}
           >
-            <ListItemText primary="Home" sx={{textTransform: "none"}}/>
+            <ListItemText primary="Home" sx={{ textTransform: "none" }} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -58,6 +57,98 @@ const NavBar = () => {
             <ListItemText primary="Articles" />
           </ListItemButton>
         </ListItem>
+        <div className="w-2/3 m-auto">
+          <Divider />
+        </div>
+        {loading ? (
+          <>
+            &ensp;||&ensp;
+            <CircularProgress
+              sx={{ paddingLeft: "8px", color: "white" }}
+              size="22px"
+            />
+          </>
+        ) : (
+          <>
+            {user?.uid ? (
+              <>
+                {/* &ensp;||&ensp;
+                <Button
+                  sx={{ color: "#fff", textTransform: "none" }}
+                  onClick={() => {
+                    router.push("/profile/" + user?.uid);
+                  }}
+                >
+                  Profile
+                </Button>
+                <Button
+                  sx={{ color: "#fff", textTransform: "none" }}
+                  onClick={() => {
+                    router.push("/");
+                    OWlogout();
+                    signOut(auth);
+                    sessionStorage.removeItem("user");
+                  }}
+                >
+                  Log Out
+                </Button> */}
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{ textAlign: "center" }}
+                    onClick={() => router.push("/profile/" + user?.uid)}
+                  >
+                    <ListItemText primary="Profile" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{ textAlign: "center" }}
+                    onClick={() => {
+                      router.push("/");
+                      OWlogout();
+                      signOut(auth);
+                      sessionStorage.removeItem("user");
+                    }}
+                  >
+                    <ListItemText primary="Log Out" />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            ) : (
+              <>
+                {/* &ensp;||&ensp;
+                    <Button
+                      sx={{ color: "#fff",  textTransform: "none" }}
+                      onClick={() => router.push("/register")}
+                    >
+                      Register
+                    </Button>
+                    <Button
+                      sx={{ color: "#fff",  textTransform: "none" }}
+                      onClick={() => router.push("/signin")}
+                    >
+                      Sign In
+                    </Button> */}
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{ textAlign: "center" }}
+                    onClick={() => router.push("/register")}
+                  >
+                    <ListItemText primary="Register" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{ textAlign: "center" }}
+                    onClick={() => router.push("/signin")}
+                  >
+                    <ListItemText primary="Sign In" />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            )}{" "}
+          </>
+        )}
       </List>
     </Box>
   );
@@ -88,11 +179,14 @@ const NavBar = () => {
             OliviaWeb
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button sx={{ color: "#fff",  textTransform: "none" }} onClick={() => router.push("/")}>
+            <Button
+              sx={{ color: "#fff", textTransform: "none" }}
+              onClick={() => router.push("/")}
+            >
               Home
             </Button>
             <Button
-              sx={{ color: "#fff",  textTransform: "none" }}
+              sx={{ color: "#fff", textTransform: "none" }}
               onClick={() => router.push("/articles")}
             >
               Articles
@@ -101,7 +195,10 @@ const NavBar = () => {
             {loading ? (
               <>
                 &ensp;||&ensp;
-                <CircularProgress sx={{ paddingLeft:"8px", color: "white" }} size="22px" />
+                <CircularProgress
+                  sx={{ paddingLeft: "8px", color: "white" }}
+                  size="22px"
+                />
               </>
             ) : (
               <>
@@ -109,7 +206,7 @@ const NavBar = () => {
                   <>
                     &ensp;||&ensp;
                     <Button
-                      sx={{ color: "#fff",  textTransform: "none" }}
+                      sx={{ color: "#fff", textTransform: "none" }}
                       onClick={() => {
                         router.push("/profile/" + user?.uid);
                       }}
@@ -117,7 +214,7 @@ const NavBar = () => {
                       Profile
                     </Button>
                     <Button
-                      sx={{ color: "#fff",  textTransform: "none" }}
+                      sx={{ color: "#fff", textTransform: "none" }}
                       onClick={() => {
                         router.push("/");
                         OWlogout();
@@ -132,13 +229,13 @@ const NavBar = () => {
                   <>
                     &ensp;||&ensp;
                     <Button
-                      sx={{ color: "#fff",  textTransform: "none" }}
+                      sx={{ color: "#fff", textTransform: "none" }}
                       onClick={() => router.push("/register")}
                     >
                       Register
                     </Button>
                     <Button
-                      sx={{ color: "#fff",  textTransform: "none" }}
+                      sx={{ color: "#fff", textTransform: "none" }}
                       onClick={() => router.push("/signin")}
                     >
                       Sign In

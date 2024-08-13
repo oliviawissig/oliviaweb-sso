@@ -119,23 +119,10 @@ export default function Home() {
             </li>
           </ul>
         </li>
-        <li className="p-3">
-          It is possible, but extremely inconvenient for publishers to make the
-          switch from nonSSO to SSO (or vise-versa). To make the registration
-          change, Partner Support is required to make updates to the network &
-          Spot ID configuration which forces a disconnect/detachment for all
-          users from the Spot ID.
-          <br></br>
-          <br></br>
-          Essentially, comments will remain but they will be read-only and
-          cannot be linked to any new users. The publisher will also be expected
-          to re-register existing users with the new registration method. This
-          is a semi-complicated process, so feel free to reach out to sales
-          engineering to help set proper expectations.
-        </li>
       </ul>
       <h2>Feel free to visit my article pages and check it out for yourself:</h2>
       <OWLink href="/articles"><h2>Articles</h2></OWLink>
+      <p><br></br><br></br><br></br></p>
     </>
   );
 }
