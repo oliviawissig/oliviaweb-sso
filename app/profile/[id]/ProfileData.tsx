@@ -10,13 +10,25 @@ import {
   where,
 } from "firebase/firestore";
 import { CldUploadWidget } from "next-cloudinary";
-import { Button, CircularProgress, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { auth, db } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import OWProgress from "@/app/components/OWProgress";
 import { OWUser } from "@/app/api/users/[id]/route";
-import { updateEmail } from "firebase/auth";
+import { deleteUser, updateEmail } from "firebase/auth";
 import OWButton from "@/app/components/OWButton";
 import ImageIcon from "@mui/icons-material/Image";
 import { logout as OWLogout, startTTH } from "@open-web/react-sdk";
@@ -34,6 +46,11 @@ interface ProfileDataProps {
   id: string;
 }
 
+interface DeleteModalProps {
+  event: any;
+  reason: string;
+}
+
 const ProfileData = ({ id }: ProfileDataProps) => {
   const [user] = useAuthState(auth);
   const [dbUser, setDbUser] = useState<OWUser>();
@@ -48,6 +65,40 @@ const ProfileData = ({ id }: ProfileDataProps) => {
   const [newUsername, setNewUsername] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
+
+  const handleEraseAccount = async () => {
+    //save primary key to access DB & OW DB entries
+    const tempID = user?.uid;
+    //attempt to delete user from firebase auth
+    deleteUser(user!).then(async () => {
+      // User deleted, continue to remove from DB & OW DB
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/delete-user/${tempID}`,
+        {
+          method: "DELETE",
+          cache: "no-store",
+        }
+      );
+      if(response.ok){
+        console.log("Successfully deleted user");
+      }else{
+        console.log("Error deleting user", response.text);
+      }
+    }).catch((error) => {
+      // An error ocurred
+      console.log(`Unable to delete account ${user?.displayName}!`);
+      console.log(error);
+    });
+  };
 
   const handleUpdateUsername = async () => {
     if (newUsername) {
@@ -388,6 +439,62 @@ const ProfileData = ({ id }: ProfileDataProps) => {
               </OWButton>
             )}
           </CldUploadWidget>
+          <div className="my-5">
+            <Button variant="outlined" color="error" onClick={handleDeleteOpen}>
+              Delete Account
+            </Button>
+          </div>
+          <Dialog
+            disableEscapeKeyDown
+            fullScreen={fullScreen}
+            open={deleteOpen}
+            onClose={(event, reason) => {
+              if (reason && reason == "backdropClick") {
+                return;
+              }
+              setDeleteOpen(false);
+            }}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">
+              Are you sure you want to delete your account?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                This will erase and remove all user data tied to your user:
+                <ul>
+                  <li>Firebase Authentication Records</li>
+                  <li>Firebase Firestorage Records</li>
+                  <li>OpenWeb user & user information</li>
+                </ul>
+                Comments may remain but will be authored by an anonymous user
+                placeholder.<br></br>
+                <br></br>
+                <b>This action cannot be undone.</b>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                disabled={!deleteLoading ? false : true}
+                autoFocus
+                onClick={() => setDeleteOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={!deleteLoading ? false : true}
+                onClick={() => {
+                  setDeleteLoading(true);
+                  handleEraseAccount();
+                  router.push("/");
+                }}
+                autoFocus
+                color="error"
+              >
+                {!deleteLoading ? "Confirm" : <CircularProgress />}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       )}
     </>

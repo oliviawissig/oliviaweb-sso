@@ -14,7 +14,6 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  console.log(params.id);
   const docRef = doc(db, "users", params.id);
   const docSnap = await getDoc(docRef);
 
