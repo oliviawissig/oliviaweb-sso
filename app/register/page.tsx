@@ -15,6 +15,7 @@ import {
   verifyDisplayName,
   verifyUsername,
 } from "../components/ValidationHandler";
+import OWLink from "../components/OWLink";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -131,6 +132,10 @@ const RegisterPage = () => {
           variant="outlined"
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        <div>
+          <OWLink href="/signin">Already have an account?</OWLink>
+        </div>
 
         {error && <Alert severity="error">Error creating user! {error}</Alert>}
 
