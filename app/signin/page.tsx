@@ -1,6 +1,6 @@
 "use client";
 import { Alert, Box, Button, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   useAuthState,
   useSignInWithEmailAndPassword,
@@ -21,7 +21,6 @@ const SignInPage = () => {
   const [loading, setLoading] = useState(false);
   const [user] = useAuthState(auth);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -41,21 +40,31 @@ const SignInPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (searchParams.get("reset")) {
-      setAlert(true);
-    } else {
-      setAlert(false);
-      console.log("NO THERE ARE no SEARCH PARAMS!");
-    }
-  }, [searchParams]);
+  function PasswordAlert() {
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+      if (searchParams.get("reset")) {
+        setAlert(true);
+      } else {
+        setAlert(false);
+        console.log("NO THERE ARE no SEARCH PARAMS!");
+      }
+    }, [searchParams]);
+
+    return (
+      <Alert className="mb-5" severity="success">
+        Password reset sent! Follow the instructions in the email.
+      </Alert>
+    );
+  }
 
   return (
     <div
       id="log-in-form"
       className="flex flex-col w-1/2 m-auto mt-16 max-[600px]:w-11/12"
     >
-      {alert && <Alert className="mb-5" severity="success">Password reset sent! Follow the instructions in the email.</Alert>}
+      <Suspense>{alert && <PasswordAlert />}</Suspense>
       <h1 className="roboto-regular text-lg pb-5">Sign In:</h1>
       <Box
         component="form"
